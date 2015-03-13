@@ -47,18 +47,7 @@ elseif ($_REQUEST['action'] == "undelete_session") {
 
 ShowEntries ($current_init);        
 
-function DeleteUndelete($action, $id) {
-    if ($action == "delete") { $dvalue = 1; }
-    elseif ($action == "undelete") { $dvalue = 0; }
-    $q = 'UPDATE session SET `deleted` = '.$dvalue.' WHERE `id` = "'.$id.'"';
 
-    if (mysql_query($q)) {
-        print '<p>SUCCESS: '.$q.'</p>'.PHP_EOL;
-    }
-    else {
-        print '<p>FAILED TO EXECUTE: '. $q .'</p>'.PHP_EOL;
-    }
-} //end function DeleteUndelete
 
 function ShowEntries ($init, $offset=0) { 
     $q = 'SELECT * FROM session WHERE fk_initiative = '.$init.' ORDER BY `id` DESC LIMIT '.$offset.',60';
@@ -106,21 +95,17 @@ function DisplayAdjustor() {
     return "<select class=\"row-select\">$select</select> <button class=\"adjust-time\">Go</button>\n"; 
 }
 
-/*
-function MysqlResultsTable ($mysql_results, $table_id='') {
-  while ($myrow = mysql_fetch_assoc($mysql_results)) {
-    if (! ($headers))
-      $headers = array_keys($myrow);
-    $rows .= " <tr>\n";
-    foreach ($headers as $k)
-      $rows .= "  <td class=$k>$myrow[$k]</td>\n";
-    $rows .= " </tr>\n";
-  } // end while myrow
-  $header = join("</th><th>",$headers);
-  $header = "<tr><th>$header</th></tr>\n";
-  if ($table_id != '') { $id = ' id="'.$table_id.'"'; }
-  $rows = "<table$id>$header$rows</table>\n";
-  return ($rows);
-} //end function MysqlResultsTable
-*/
+
+function DeleteUndelete($action, $id) {
+    if ($action == "delete") { $dvalue = 1; }
+    elseif ($action == "undelete") { $dvalue = 0; }
+    $q = 'UPDATE session SET `deleted` = '.$dvalue.' WHERE `id` = "'.$id.'"';
+
+    if (mysql_query($q)) {
+        print '<p>SUCCESS: '.$q.'</p>'.PHP_EOL;
+    }
+    else {
+        print '<p>FAILED TO EXECUTE: '. $q .'</p>'.PHP_EOL;
+    }
+} //end function DeleteUndelete
 ?>
