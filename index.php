@@ -28,6 +28,8 @@ form { display: inline }
 </script>
 </head>
 <body>
+<div id="wrapper">
+<div id="content">
 <h1>Suma Session Manager</h1>
 <?
 include ("config.php");
@@ -53,6 +55,13 @@ elseif ($_REQUEST['action'] == "undelete_session") {
 }
 
 ShowEntries ($current_init, $offset, $entries_per_page);        
+
+print "</div><!--id=content-->\n";
+
+print '<div id="footer">';
+include("license.php");
+print "</div><!--id=footer-->\n";
+print "</div><!--id=wrapper-->\n";
 
 ?>
 
