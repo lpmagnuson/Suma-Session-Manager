@@ -34,12 +34,31 @@ if ($_REQUEST['action'] == "move_session") {
     print_r($_REQUEST);
     print '<hr>';
 }
-elseif ($_REQUEST['action'] == "delete_session") {
+if ($_REQUEST['action'] == "delete_session") {
     print_r($_REQUEST);
+    DeleteUndelete("delete",$_REQUEST['session_id']);
+    print '<hr>';
+}
+elseif ($_REQUEST['action'] == "undelete_session") {
+    print_r($_REQUEST);
+    DeleteUndelete("undelete",$_REQUEST['session_id']);
     print '<hr>';
 }
 
 ShowEntries ($current_init);        
+
+function DeleteUndelete($action, $id) {
+    if ($action == "delete") { $dvalue = 1; }
+    elseif ($action == "undelete") { $dvalue = 0; }
+    $q = 'UPDATE session SET `deleted` = '.$dvalue.' WHERE `id` = "'.$id.'"';
+
+    if (mysql_query($q)) {
+        print '<p>SUCCESS: '.$q.'</p>'.PHP_EOL;
+    }
+    else {
+        print '<p>FAILED TO EXECUTE: '. $q .'</p>'.PHP_EOL;
+    }
+} //end function DeleteUndelete
 
 function ShowEntries ($init, $offset=0) { 
     $q = 'SELECT * FROM session WHERE fk_initiative = '.$init.' ORDER BY `id` DESC LIMIT '.$offset.',60';
