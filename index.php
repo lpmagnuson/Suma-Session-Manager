@@ -51,7 +51,7 @@ ShowEntries ($current_init);
 
 
 function ShowEntries ($init, $offset=0) { 
-    $q = 'SELECT * FROM session WHERE fk_initiative = '.$init.' ORDER BY `id` DESC LIMIT '.$offset.',60';
+    $q = 'SELECT `session`.*,count(`number`) FROM `session`,`count` WHERE session.fk_initiative = '.$init.' AND session.id = count.fk_session AND count.number = 1 GROUP BY fk_session ORDER BY `session`.`id` DESC LIMIT '.$offset.',60';
 print $q;
 $r = mysql_query($q);
 
