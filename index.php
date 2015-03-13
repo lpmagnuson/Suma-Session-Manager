@@ -71,6 +71,13 @@ while ($myrow = mysql_fetch_assoc($r)) {
     foreach ($headers as $k) {
         $rows .= '  <td class="'.$k.'">'.$myrow[$k].'</td>'.PHP_EOL;
     }
+    if ($myrow['deleted'] == 0) {
+        $rows .= '<td><form action="?"><input type="hidden" name="action" value="delete_session"><input type="hidden" name="session_id" value="' .$myrow['id'] .'"><input type="submit" value="Delete"></form></td>'.PHP_EOL;
+    }
+    elseif ($myrow['deleted'] == 1) {
+        $rows .= '<td><form action="?" method="get"><input type="hidden" name="action" value="undelete_session"><input type="hidden" name="session_id" value="' .$myrow['id'] .'"><input type="submit" value="Undelete"></form></td>'.PHP_EOL;
+    }
+        
     $rows .= '  <td><form action="?"><input type="hidden" name="action" value="move_session"><input type="hidden" name="session_id" value="' .$myrow['id'] .'"><input type="hidden" name="transaction_id" value="'. $myrow['fk_transaction'] .'">Adjust Time by: ' . DisplayAdjustor() . '</form></td>'. PHP_EOL;
     $rows .= ' </tr>'.PHP_EOL;
 } // end while myrow
