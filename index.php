@@ -32,6 +32,7 @@ $current_init = $default_init;
 
 if ($_REQUEST['action'] == "move_session") {
     print_r($_REQUEST);
+    MoveSession($_REQUEST['session_id'], $_REQUEST['transaction_id'], $_REQUEST['time_shift']);
     print '<hr>';
 }
 if ($_REQUEST['action'] == "delete_session") {
@@ -61,13 +62,13 @@ while ($myrow = mysql_fetch_assoc($r)) {
         $rows .= '  <td class="'.$k.'">'.$myrow[$k].'</td>'.PHP_EOL;
     }
     if ($myrow['deleted'] == 0) {
-        $rows .= '<td><form action="?"><input type="hidden" name="action" value="delete_session"><input type="hidden" name="session_id" value="' .$myrow['id'] .'"><input type="submit" value="Delete"></form></td>'.PHP_EOL;
+        $rows .= '<td><form action="?" method="post"><input type="hidden" name="action" value="delete_session"><input type="hidden" name="session_id" value="' .$myrow['id'] .'"><input type="submit" value="Delete"></form></td>'.PHP_EOL;
     }
     elseif ($myrow['deleted'] == 1) {
-        $rows .= '<td><form action="?" method="get"><input type="hidden" name="action" value="undelete_session"><input type="hidden" name="session_id" value="' .$myrow['id'] .'"><input type="submit" value="Undelete"></form></td>'.PHP_EOL;
+        $rows .= '<td><form action="?" method="post"><input type="hidden" name="action" value="undelete_session"><input type="hidden" name="session_id" value="' .$myrow['id'] .'"><input type="submit" value="Undelete"></form></td>'.PHP_EOL;
     }
         
-    $rows .= '  <td><form action="?"><input type="hidden" name="action" value="move_session"><input type="hidden" name="session_id" value="' .$myrow['id'] .'"><input type="hidden" name="transaction_id" value="'. $myrow['fk_transaction'] .'">Adjust Time by: ' . DisplayAdjustor() . '</form></td>'. PHP_EOL;
+    $rows .= '  <td><form action="?" method="post"><input type="hidden" name="action" value="move_session"><input type="hidden" name="session_id" value="' .$myrow['id'] .'"><input type="hidden" name="transaction_id" value="'. $myrow['fk_transaction'] .'">Adjust Time by: ' . DisplayAdjustor() . '</form></td>'. PHP_EOL;
     $rows .= ' </tr>'.PHP_EOL;
 } // end while myrow
 $header = join('</th><th>',$headers);
@@ -92,7 +93,29 @@ function DisplayAdjustor() {
     foreach ($opts as $disp => $val) {
         $select .= "<option value=\"$val\">$disp</option>\n";
     }
-    return "<select class=\"row-select\">$select</select> <button class=\"adjust-time\">Go</button>\n"; 
+    return '<select class="row-select" name="time_shift">'.$select.'</select> <button class="adjust-time">Go</button>'.PHP_EOL; 
+}
+
+function MoveSession($session_id, $transaction_id, $time_shift) {
+    list($action, $hms) = split(" ", $time_shift);
+    $q1 = 'UPDATE `session` SET `start` = '.$action.' (`start`, "'.$hms.'"), `end` = '.$action.'(`end`, "'.$hms.'") WHERE `id` = "'.$session_id.'"';
+    $q2 = 'UPDATE `transaction` SET `start` = '.$action.' (`start`, "'.$hms.'"), `end` = '.$action.'(`end`, "'.$hms.'") WHERE `id` = "'.$transaction_id.'"';
+    $q3 = 'UPDATE `count` SET `occurrence` = '.$action.' (`occurrence`, "'.$hms.'") WHERE `fk_session` = "'.$session_id.'"';
+    $queries = array ($q1,$q2,$q3);
+    foreach ($queries as $q) {
+        if (mysql_query($q)) {
+            print '<li>SUCCESS: '.$q.'</li>'.PHP_EOL;
+        }
+        else {
+            print '<li>FAILED TO EXECUTE: '. $q .'</li>'.PHP_EOL;
+        }   
+    }
+
+    /*
+    print "<li>$q1</li>\n";
+    print "<li>$q2</li>\n";
+    print "<li>$q3</li>\n";
+    */
 }
 
 
