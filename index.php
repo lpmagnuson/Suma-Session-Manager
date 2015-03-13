@@ -36,7 +36,8 @@ $dblink = mysql_pconnect($mysql_host,$mysql_user,$mysql_password) or die ("canno
 mysql_select_db($mysql_database,$dblink) or die ("cannot select database");
 
 $current_init = $default_init;
-// print(InitSelector($current_init));
+
+$offset = (isset($_REQUEST['offset']) ? $_REQUEST['offset'] : 0);
 
 if ($_REQUEST['action'] == "move_session") {
     MoveSession($_REQUEST['session_id'], $_REQUEST['transaction_id'], $_REQUEST['time_shift']);
@@ -51,7 +52,7 @@ elseif ($_REQUEST['action'] == "undelete_session") {
     print '<hr>';
 }
 
-ShowEntries ($current_init);        
+ShowEntries ($current_init, $offset, $entries_per_page);        
 
 ?>
 

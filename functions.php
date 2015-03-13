@@ -1,8 +1,22 @@
 <?
-function ShowEntries ($init, $offset=0) { 
-    $q = 'SELECT `session`.*,count(`number`) as Counts FROM `session`,`count` WHERE session.fk_initiative = '.$init.' AND session.id = count.fk_session AND count.number = 1 GROUP BY fk_session ORDER BY `session`.`id` DESC LIMIT '.$offset.',60';
+function ShowEntries ($init, $offset=0, $entries_per_page=60) { 
+    $q = 'SELECT `session`.*,count(`number`) as Counts FROM `session`,`count` WHERE session.fk_initiative = '.$init.' AND session.id = count.fk_session AND count.number = 1 GROUP BY fk_session ORDER BY `session`.`id` DESC LIMIT '.$offset.','.$entries_per_page;
 print '<p>'.$q.'</p>';
+
+
+$next_offset_older = $offset+$entries_per_page;
+print '<form action="?" method="post"><input type="hidden" name="offset" value="'.$next_offset_older.'"><input type="submit" value="Next Older '.$entries_per_page.' Entries"></form>'.PHP_EOL;
+
+if ($offset > 0) { 
+    $next_offset_newer = $offset-$entries_per_page;
+    if ($next_offset_newer < 0) { $next_offset_newer = 0; }
+    print '<form action="?" method="post"><input type="hidden" name="offset" value="'.$next_offset_newer.'"><input type="submit" value="Next Newer '.$entries_per_page.' Entries"></form>'.PHP_EOL;
+
+}
+
+
 $r = mysql_query($q);
+
 
 while ($myrow = mysql_fetch_assoc($r)) {
     $headers = array_keys($myrow);
