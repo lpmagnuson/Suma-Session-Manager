@@ -1,6 +1,6 @@
 <?
-function ShowEntries ($init, $offset=0, $entries_per_page=60) { 
-    $q = 'SELECT `session`.*,count(`number`) as Counts FROM `session`,`count` WHERE session.fk_initiative = '.$init.' AND session.id = count.fk_session AND count.number = 1 GROUP BY fk_session ORDER BY `session`.`id` DESC LIMIT '.$offset.','.$entries_per_page;
+function ShowEntries ($init, $offset=0, $entries_per_page=60, $and_where="") { 
+    $q = 'SELECT `session`.*,count(`number`) as Counts FROM `session`,`count` WHERE session.fk_initiative = '.$init.' AND session.id = count.fk_session AND count.number = 1 '. $and_where .' GROUP BY fk_session ORDER BY `session`.`id` DESC LIMIT '.$offset.','.$entries_per_page;
 print '<p>'.$q.'</p>';
 
 

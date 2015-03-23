@@ -5,13 +5,12 @@
 form { display: inline }
 .highlight { background-color: yellow }
 </style>
-<link rel="stylesheet" type="text/css" href="style.css" type="text/css" />
 <script type="text/javascript"
          src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.js">
 </script>
+<link rel="stylesheet" type="text/css" href="style.css" type="text/css" />
 
-
-<script>
+<script type="text/javascript">
      $(document).ready(function() {
              $('tr').mousedown(function() {
                      $(this).parent().children().removeClass('highlight');
@@ -54,7 +53,11 @@ elseif ($_REQUEST['action'] == "undelete_session") {
     print '<hr>';
 }
 
-ShowEntries ($current_init, $offset, $entries_per_page);        
+if (isset($_REQUEST['date_search'])) {
+    $and_where = "AND `start` LIKE '".$_REQUEST['date_search']."%'";
+}
+
+ShowEntries ($current_init, $offset, $entries_per_page, $and_where);        
 
 print "</div><!--id=content-->\n";
 
