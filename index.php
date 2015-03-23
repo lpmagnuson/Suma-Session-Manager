@@ -14,6 +14,7 @@ form { display: inline }
 
 <script type="text/javascript">
      $(document).ready(function() {
+             $('#tabs').tabs();
              $('tr').mousedown(function() {
                      $(this).parent().children().removeClass('highlight');
                      $(this).addClass('highlight');
@@ -58,9 +59,27 @@ elseif ($_REQUEST['action'] == "undelete_session") {
 if (isset($_REQUEST['date_search'])) {
     $and_where = "AND `start` LIKE '".$_REQUEST['date_search']."%'";
 }
+?>
 
-ShowEntries ($current_init, $offset, $entries_per_page, $and_where);        
+<div id="tabs">
+ <ul>
+  <li><a href="#tabs-sessions">Sessions</a></li>
+  <li><a href="#tabs-multi">Hours with Multiple Sessions</a></li>
+ </ul>
 
+ <div id="tabs-sessions">
+<?
+    ShowEntries ($current_init, $offset, $entries_per_page, $and_where, $_REQUEST['hour_focus']);        
+?>
+ </div><!--id=tabs-sessions-->
+
+ <div id="tabs-multi">
+<?
+    ShowMultiHours($current_init);
+?>
+ </div><!--id=tabs-multi-->
+</div><!--id=tabs-->
+<?
 print "</div><!--id=content-->\n";
 
 print '<div id="footer">';

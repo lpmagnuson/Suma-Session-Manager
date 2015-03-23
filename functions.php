@@ -1,5 +1,5 @@
 <?
-function ShowEntries ($init, $offset=0, $entries_per_page=60, $and_where="") { 
+function ShowEntries ($init, $offset=0, $entries_per_page=60, $and_where="", $hour_focus="") { 
     $q = 'SELECT `session`.*,count(`number`) as Counts FROM `session`,`count` WHERE session.fk_initiative = '.$init.' AND session.id = count.fk_session AND count.number = 1 '. $and_where .' GROUP BY fk_session ORDER BY `session`.`id` DESC LIMIT '.$offset.','.$entries_per_page;
 print '<p>'.$q.'</p>';
 
@@ -20,7 +20,12 @@ $r = mysql_query($q);
 
 while ($myrow = mysql_fetch_assoc($r)) {
     $headers = array_keys($myrow);
-    $rows .= ' <tr>'.PHP_EOL;
+    if (preg_match("/$hour_focus/", $myrow['start'])) {
+        $class = ' class="hour-focus"';
+    }
+    else { $class =''; }
+
+    $rows .= ' <tr'.$class.'>'.PHP_EOL;
     foreach ($headers as $k) {
         $rows .= '  <td class="'.$k.'">'.$myrow[$k].'</td>'.PHP_EOL;
     }
@@ -88,4 +93,37 @@ function DeleteUndelete($action, $id) {
         print '<p>FAILED TO EXECUTE: '. $q .'</p>'.PHP_EOL;
     }
 } //end function DeleteUndelete
+
+
+function ShowMultiHours($init) {
+    $q = "SELECT CONCAT( DATE(`start`) , ' ', HOUR(`start`) ) AS DateHour, count( * ) AS HourCount FROM `session` WHERE fk_initiative = '".$init."' GROUP BY HOUR(`start`) , DATE(`start`) HAVING HourCount > 1 ORDER BY DateHour DESC";
+    print "<p>$q</p>\n";;
+    $r = mysql_query($q);
+    if (mysql_num_rows($r) == 0) {
+        print '<p>No hours with multiple entries found</p>';
+    }
+    else {
+        while ($myrow = mysql_fetch_assoc($r)) {
+            if (! ($headers)) 
+                $headers = array_keys($myrow);
+            $rows .=  '<tr>'.PHP_EOL;
+            foreach ($headers as $k) {
+                if ($k == "DateHour") {
+                    list ($date,$hour) = preg_split("/ /",$myrow[$k]);
+                    if ($hour < 10) { $display_hour = '0'.$hour; }
+                    else { $display_hour = $hour; }
+                    $myrow[$k] = '<a href="?date_search='.$date.'&hour_focus='.$date.' '.$display_hour.'">' .$date. ' '.$display_hour.'00</a>';
+                }
+                $rows .= '  <td class="'.$k.'">'.$myrow[$k].'</td>'.PHP_EOL;
+            }
+            $rows .= ' </tr>'.PHP_EOL;
+        } // end while myrow
+        $header = join('</th><th>',$headers);
+        $header = '<tr><th>'.$header.'</th></tr>'.PHP_EOL;
+        if ($table_id != '') { $id = ' id="'.$table_id.'"'; }
+        $rows = '<table id="multi-hours">'.$header.$rows.'</table>'.PHP_EOL;
+        print($rows);
+    }
+}
+
 ?>

@@ -10,6 +10,8 @@ td {text-align: right; padding-left:1em }
 #content { padding-top: 0px; padding-left: 10px; padding-bottom: 100px }
 #footer { position: absolute; bottom: 10; left: 0; height: 80px; padding: 10px}
 
+.hour-focus { font-style: italic; color: red }
+
 /*
 a, a:hover, a:visited { color: #4183c4 }
 .alert { border: 3px solid red; padding: .15em .5em; border-radius: 1em; margin: .5em}
