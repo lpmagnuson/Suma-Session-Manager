@@ -20,7 +20,7 @@ $r = mysql_query($q);
 
 while ($myrow = mysql_fetch_assoc($r)) {
     $headers = array_keys($myrow);
-    if (preg_match("/$hour_focus/", $myrow['start'])) {
+    if (isset($hour_focus) && (preg_match("/$hour_focus/", $myrow['start']))) {
         $class = ' class="hour-focus"';
     }
     else { $class =''; }
