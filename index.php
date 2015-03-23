@@ -8,6 +8,8 @@ form { display: inline }
 <script type="text/javascript"
          src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.js">
 </script>
+<link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.3/themes/smoothness/jquery-ui.css" />
+<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.3/jquery-ui.min.js"></script>
 <link rel="stylesheet" type="text/css" href="style.css" type="text/css" />
 
 <script type="text/javascript">
