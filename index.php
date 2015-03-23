@@ -1,3 +1,9 @@
+<? 
+session_start(); 
+if (isset($_REQUEST['set_init'])) {
+    $_SESSION['current_init'] = $_REQUEST['set_init'];
+}
+?>
 <html>
 <head>
 <title>Suma Session Manager</title>
@@ -15,6 +21,10 @@ form { display: inline }
 <script type="text/javascript">
      $(document).ready(function() {
              $('#tabs').tabs();
+             $('#initiative-selector').change(function() {
+                     var init = $(this).val();
+                     window.location.replace('?set_init='+init);
+                 });
              $('tr').mousedown(function() {
                      $(this).parent().children().removeClass('highlight');
                      $(this).addClass('highlight');
@@ -39,7 +49,19 @@ include ("functions.php");
 $dblink = mysql_pconnect($mysql_host,$mysql_user,$mysql_password) or die ("cannot connect");
 mysql_select_db($mysql_database,$dblink) or die ("cannot select database");
 
-$current_init = $default_init;
+if (! is_readable("config.php")) {
+    print '<div class="alert"><h3>Config file not readable</h3><p>The file <strong>config.php</strong> is not present or not readable. Please copy the file <strong>config-sample.php</strong> to <strong>config.php</strong> and add your local Suma Server URL to activate this service.</p></div>';
+}
+elseif (! isset($sumaserver_url) || ($sumaserver_url == "")){
+    print '<div class="alert"><h3>$sumaserver_url not set</h3><p>The <strong>$sumaserver_url</strong> variable in <strong>config.php</strong> is not set. Please set this variable in order to use the service.</p></div>.';
+}
+else {
+    if (isset($default_init) &! isset ($_SESSION['current_init'])) {
+        $_SESSION['current_init'] = $default_init;
+    }
+    print(SelectInitiative($_SESSION['current_init']));
+}
+
 
 $offset = (isset($_REQUEST['offset']) ? $_REQUEST['offset'] : 0);
 
@@ -69,13 +91,13 @@ if (isset($_REQUEST['date_search'])) {
 
  <div id="tabs-sessions">
 <?
-    ShowEntries ($current_init, $offset, $entries_per_page, $and_where, $_REQUEST['hour_focus']);        
+    ShowEntries ($_SESSION['current_init'], $offset, $entries_per_page, $and_where, $_REQUEST['hour_focus']);        
 ?>
  </div><!--id=tabs-sessions-->
 
  <div id="tabs-multi">
 <?
-    ShowMultiHours($current_init);
+    ShowMultiHours($_SESSION['current_init']);
 ?>
  </div><!--id=tabs-multi-->
 </div><!--id=tabs-->
