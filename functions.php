@@ -3,15 +3,26 @@ function ShowEntries ($init, $offset=0, $entries_per_page=60, $and_where="", $ho
     $q = 'SELECT `session`.*,count(`number`) as Counts FROM `session`,`count` WHERE session.fk_initiative = '.$init.' AND session.id = count.fk_session AND count.number = 1 '. $and_where .' GROUP BY fk_session ORDER BY `session`.`id` DESC LIMIT '.$offset.','.$entries_per_page;
 print '<p>'.$q.'</p>';
 
-
-$next_offset_older = $offset+$entries_per_page;
-print '<form action="?" method="post"><input type="hidden" name="offset" value="'.$next_offset_older.'"><input type="submit" value="Next Older '.$entries_per_page.' Entries"></form>'.PHP_EOL;
-
-if ($offset > 0) { 
-    $next_offset_newer = $offset-$entries_per_page;
-    if ($next_offset_newer < 0) { $next_offset_newer = 0; }
-    print '<form action="?" method="post"><input type="hidden" name="offset" value="'.$next_offset_newer.'"><input type="submit" value="Next Newer '.$entries_per_page.' Entries"></form>'.PHP_EOL;
-
+//display forward and back controls by date or by sessions
+if (isset($_REQUEST['date_search'])) {
+    list ($year, $month, $day) = preg_split ("/\-/", $_REQUEST['date_search']);
+    if (isset($day) && strlen($day)==2) {
+        $next_date= date("Y-m-d", strtotime($_REQUEST['date_search'] . '+ 1 day'));
+        $previous_date= date("Y-m-d", strtotime($_REQUEST['date_search'] . '- 1 day'));
+    }
+    
+    print '<form action="?" method="post"><input type="hidden" name="date_search" value="'.$previous_date.'"><input type="submit" value="&laquo; '.$previous_date.'"></form>'.PHP_EOL;
+    print '<form action="?" method="post"><input type="hidden" name="date_search" value="'.$next_date.'"><input type="submit" value="'.$next_date.' &raquo;"></form>'.PHP_EOL;
+}
+else {
+    $next_offset_older = $offset+$entries_per_page;
+    print '<form action="?" method="post"><input type="hidden" name="offset" value="'.$next_offset_older.'"><input type="submit" value="Previous '.$entries_per_page.' Entries"></form>'.PHP_EOL;
+    
+    if ($offset > 0) { 
+        $next_offset_newer = $offset-$entries_per_page;
+        if ($next_offset_newer < 0) { $next_offset_newer = 0; }
+        print '<form action="?" method="post"><input type="hidden" name="offset" value="'.$next_offset_newer.'"><input type="submit" value="Next Newer '.$entries_per_page.' Entries"></form>'.PHP_EOL;
+    }
 }
 
 
