@@ -86,7 +86,11 @@ if (isset($_REQUEST['date_search'])) {
 <div id="tabs">
  <ul>
   <li><a href="#tabs-sessions">Sessions</a></li>
-  <li><a href="#tabs-multi">Hours with Multiple Sessions</a></li>
+    <?
+    if (in_array($_SESSION['current_init'], $one_per_hour_inits)) {
+        print '<li><a href="#tabs-multi">Hours with Multiple Sessions</a></li>'.PHP_EOL;
+    }
+?>
  </ul>
 
  <div id="tabs-sessions">
@@ -95,13 +99,14 @@ if (isset($_REQUEST['date_search'])) {
 ?>
  </div><!--id=tabs-sessions-->
 
- <div id="tabs-multi">
+
 <?
-    ShowMultiHours($_SESSION['current_init']);
-?>
- </div><!--id=tabs-multi-->
-</div><!--id=tabs-->
-<?
+    if (in_array($_SESSION['current_init'], $one_per_hour_inits)) {
+        print '  <div id="tabs-multi">'.PHP_EOL;
+        ShowMultiHours($_SESSION['current_init']);
+        print '  </div><!--id=tabs-multi-->'.PHP_EOL;
+        print ' </div><!--id=tabs-->'.PHP_EOL;
+    }
 print "</div><!--id=content-->\n";
 
 print '<div id="footer">';
