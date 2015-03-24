@@ -1,4 +1,8 @@
 <?
+define ("DEBUG", false); // if DEBUG==true, display mysql query strings
+
+$sumaserver_url = "http://www6.wittenberg.edu/lib/sumaserver"; // full url with no trailing slash, e.g. http://www.example.com/sumaserver, see note about sumaserver security in README.md file
+
 $mysql_host     = "localhost";
 $mysql_database = "";
 $mysql_user     = "";

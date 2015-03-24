@@ -1,7 +1,13 @@
 <?
+function PrintQuery($q) {
+    if (DEBUG === true) {
+        print "<p>$q</p>\n";
+    }
+}
+
 function ShowEntries ($init, $offset=0, $entries_per_page=60, $and_where="", $hour_focus="") { 
     $q = 'SELECT `session`.*,count(`number`) as Counts FROM `session`,`count` WHERE session.fk_initiative = '.$init.' AND session.id = count.fk_session AND count.number = 1 '. $and_where .' GROUP BY fk_session ORDER BY `session`.`id` DESC LIMIT '.$offset.','.$entries_per_page;
-print '<p>'.$q.'</p>';
+    PrintQuery($q);
 
 //display forward and back controls by date or by sessions
 if (isset($_REQUEST['date_search'])) {
@@ -108,7 +114,7 @@ function DeleteUndelete($action, $id) {
 
 function ShowMultiHours($init) {
     $q = "SELECT CONCAT( DATE(`start`) , ' ', HOUR(`start`) ) AS DateHour, count( * ) AS HourCount FROM `session` WHERE fk_initiative = '".$init."' GROUP BY HOUR(`start`) , DATE(`start`) HAVING HourCount > 1 ORDER BY DateHour DESC";
-    print "<p>$q</p>\n";;
+    PrintQuery($q);
     $r = mysql_query($q);
     if (mysql_num_rows($r) == 0) {
         print '<p>No hours with multiple entries found</p>';
