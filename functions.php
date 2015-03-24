@@ -13,11 +13,14 @@ function ShowEntries ($init, $offset=0, $entries_per_page=60, $and_where="", $ho
 if (isset($_REQUEST['date_search'])) {
     list ($year, $month, $day) = preg_split ("/\-/", $_REQUEST['date_search']);
     if (isset($day) && strlen($day)==2) {
-        $next_date= date("Y-m-d", strtotime($_REQUEST['date_search'] . '+ 1 day'));
-        $previous_date= date("Y-m-d", strtotime($_REQUEST['date_search'] . '- 1 day'));
+        $date = $_REQUEST['date_search'];
+        $next_date= date("Y-m-d", strtotime($date . '+ 1 day'));
+        $previous_date= date("Y-m-d", strtotime($date . '- 1 day'));
     }
-    
+    else { $date = ''; } // don't set date if not a fully qualified date
+
     print '<form action="?" method="post"><input type="hidden" name="date_search" value="'.$previous_date.'"><input type="submit" value="&laquo; '.$previous_date.'"></form>'.PHP_EOL;
+    print '<a target="suma_analysis" href="'.SUMA_REPORTS_URL.'/#/hourly?id='.$init.'&sdate='.$date.'&edate='.$date.'&classifyCounts=count&wholeSession=no&zeroCounts=no&requireActs=&excludeActs=&requireActGrps=&excludeActGrps=&excludeLocs=&days=mo,tu,we,th,fr,sa,su">Examine Day</a>'.PHP_EOL;
     print '<form action="?" method="post"><input type="hidden" name="date_search" value="'.$next_date.'"><input type="submit" value="'.$next_date.' &raquo;"></form>'.PHP_EOL;
 }
 else {
@@ -113,7 +116,7 @@ function DeleteUndelete($action, $id) {
 
 
 function ShowMultiHours($init) {
-    $q = "SELECT CONCAT( DATE(`start`) , ' ', HOUR(`start`) ) AS DateHour, count( * ) AS HourCount FROM `session` WHERE fk_initiative = '".$init."' GROUP BY HOUR(`start`) , DATE(`start`) HAVING HourCount > 1 ORDER BY DateHour DESC";
+    $q = "SELECT CONCAT( DATE(`end`) , ' ', HOUR(`end`) ) AS DateHour, count( * ) AS HourCount FROM `session` WHERE fk_initiative = '".$init."' GROUP BY HOUR(`end`) , DATE(`end`) HAVING HourCount > 1 ORDER BY DateHour DESC";
     PrintQuery($q);
     $r = mysql_query($q);
     if (mysql_num_rows($r) == 0) {
@@ -145,8 +148,7 @@ function ShowMultiHours($init) {
 
 
 function SelectInitiative($default_init) {
-global $sumaserver_url;
-$url = $sumaserver_url . "/clientinit";
+$url = SUMASERVER_URL . "/clientinit";
 if ($json = file_get_contents($url)) {
 $response = json_decode($json);
 $opts = " <option value=\"\">Select an initiative</option>\n";

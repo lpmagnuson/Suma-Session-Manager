@@ -52,8 +52,8 @@ mysql_select_db($mysql_database,$dblink) or die ("cannot select database");
 if (! is_readable("config.php")) {
     print '<div class="alert"><h3>Config file not readable</h3><p>The file <strong>config.php</strong> is not present or not readable. Please copy the file <strong>config-sample.php</strong> to <strong>config.php</strong> and add your local Suma Server URL to activate this service.</p></div>';
 }
-elseif (! isset($sumaserver_url) || ($sumaserver_url == "")){
-    print '<div class="alert"><h3>$sumaserver_url not set</h3><p>The <strong>$sumaserver_url</strong> variable in <strong>config.php</strong> is not set. Please set this variable in order to use the service.</p></div>.';
+elseif (! defined(SUMASERVER_URL) || (SUMASERVER_URL == "")){
+    print '<div class="alert"><h3>SUMASERVER_URL not set</h3><p>The <strong>SUMASERVER_URL</strong> constant in <strong>config.php</strong> is not set. Please set this constant in order to use the service.</p></div>.';
 }
 else {
     if (isset($default_init) &! isset ($_SESSION['current_init'])) {
