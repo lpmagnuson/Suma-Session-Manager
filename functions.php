@@ -50,13 +50,20 @@ while ($myrow = mysql_fetch_assoc($r)) {
         $rows .= '  <td class="'.$k.'">'.$myrow[$k].'</td>'.PHP_EOL;
     }
     if ($myrow['deleted'] == 0) {
-        $rows .= '<td><form action="?" method="post"><input type="hidden" name="action" value="delete_session"><input type="hidden" name="session_id" value="' .$myrow['id'] .'"><input type="submit" value="Delete"></form></td>'.PHP_EOL;
+        $rows .= '<td><form action="?" method="post"><input type="hidden" name="action" value="delete_sess
+ion"><input type="hidden" name="session_id" value="' .$myrow['id'] .'"><input type="submit" value="Delete"></form></td>'.PHP_EOL;
     }
     elseif ($myrow['deleted'] == 1) {
         $rows .= '<td><form action="?" method="post"><input type="hidden" name="action" value="undelete_session"><input type="hidden" name="session_id" value="' .$myrow['id'] .'"><input type="submit" value="Undelete"></form></td>'.PHP_EOL;
     }
         
-    $rows .= '  <td><form action="?" method="post"><input type="hidden" name="action" value="move_session"><input type="hidden" name="session_id" value="' .$myrow['id'] .'"><input type="hidden" name="transaction_id" value="'. $myrow['fk_transaction'] .'">Adjust Time by: ' . DisplayAdjustor() . '</form></td>'. PHP_EOL;
+    if (isset($_REQUEST['date_search'])) {
+        $date_search_hiddens = '<input type="hidden" name="date_search" value="'.$_REQUEST['date_search'].'">'.PHP_EOL;
+    }
+    if (isset($_REQUEST['hour_focus'])) {
+        $date_search_hiddens .= '<input type="hidden" name="hour_focus" value="'.$_REQUEST['hour_focus'].'">'.PHP_EOL;
+    }
+    $rows .= '  <td><form action="?" method="post"><input type="hidden" name="action" value="move_session"><input type="hidden" name="session_id" value="' .$myrow['id'] .'">'.$date_search_hiddens.'<input type="hidden" name="transaction_id" value="'. $myrow['fk_transaction'] .'">Adjust Time by: ' . DisplayAdjustor() . '</form></td>'. PHP_EOL;
     $rows .= ' </tr>'.PHP_EOL;
 } // end while myrow
 $header = join('</th><th>',$headers);
@@ -73,6 +80,7 @@ function DisplayAdjustor() {
     foreach ($opts as $disp => $val) {
         $select .= "<option value=\"$val\">$disp</option>\n";
     }
+
     return '<select class="row-select" name="time_shift">'.$select.'</select> <button class="adjust-time">Go</button>'.PHP_EOL; 
 }
 
