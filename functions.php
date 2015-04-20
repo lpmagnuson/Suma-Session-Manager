@@ -66,16 +66,8 @@ print ($rows);
 } //end function ShowEntries
 
 function DisplayAdjustor() {
-    $opts = array ("-60 min" => "subtime 01:00:00",
-                   "-30 min" => "subtime 00:30:00",
-                   "-15 min" => "subtime 00:15:00",
-                   "-10 min" => "subtime 00:10:00",
-                   "-5 min"  => "subtime 00:05:00",
-                   "+5 min"  => "addtime 00:05:00",
-                   "+10 min" => "addtime 00:10:00",
-                   "+15 min" => "addtime 00:15:00",
-                   "+30 min" => "addtime 00:30:00",
-                   "+60 min" => "addtime 01:00:00");
+    global $adjust_time_options;
+    $opts = $adjust_time_options;
     $select = "<option>Choose One:</option>\n";
 
     foreach ($opts as $disp => $val) {
@@ -116,7 +108,7 @@ function DeleteUndelete($action, $id) {
 
 
 function ShowMultiHours($init) {
-    $q = "SELECT CONCAT( DATE(`end`) , ' ', HOUR(`end`) ) AS DateHour, count( * ) AS HourCount FROM `session` WHERE fk_initiative = '".$init."' GROUP BY HOUR(`end`) , DATE(`end`) HAVING HourCount > 1 ORDER BY DateHour DESC";
+    $q = "SELECT CONCAT( DATE(`start`) , ' ', HOUR(`start`) ) AS DateHour, count( * ) AS HourCount FROM `session` WHERE fk_initiative = '".$init."' GROUP BY HOUR(`start`) , DATE(`start`) HAVING HourCount > 1 ORDER BY DateHour DESC";
     PrintQuery($q);
     $r = mysql_query($q);
     if (mysql_num_rows($r) == 0) {
