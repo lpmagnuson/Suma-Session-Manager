@@ -46,6 +46,12 @@ form { display: inline }
 <?
 include ("config.php");
 include ("functions.php");
+
+if (DEBUG === true) {
+    var_dump($_REQUEST);
+        print "<p></p>".PHP_EOL;
+}
+
 $dblink = mysql_pconnect($mysql_host,$mysql_user,$mysql_password) or die ("cannot connect");
 mysql_select_db($mysql_database,$dblink) or die ("cannot select database");
 
