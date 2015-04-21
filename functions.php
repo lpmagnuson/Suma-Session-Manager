@@ -19,18 +19,18 @@ if (isset($_REQUEST['date_search'])) {
     }
     else { $date = ''; } // don't set date if not a fully qualified date
 
-    print '<form action="?" method="post"><input type="hidden" name="date_search" value="'.$previous_date.'"><input type="submit" value="&laquo; '.$previous_date.'"></form>'.PHP_EOL;
-    print '<a target="suma_analysis" href="'.SUMA_REPORTS_URL.'/#/hourly?id='.$init.'&sdate='.$date.'&edate='.$date.'&classifyCounts=count&wholeSession=no&zeroCounts=no&requireActs=&excludeActs=&requireActGrps=&excludeActGrps=&excludeLocs=&days=mo,tu,we,th,fr,sa,su">Examine Day</a>'.PHP_EOL;
-    print '<form action="?" method="post"><input type="hidden" name="date_search" value="'.$next_date.'"><input type="submit" value="'.$next_date.' &raquo;"></form>'.PHP_EOL;
+    print '<form action="?" method="post"><input type="hidden" name="date_search" value="'.$previous_date.'"><input type="submit" value="&laquo; '.$previous_date.'" class="button"></form>'.PHP_EOL;
+    print '<a target="suma_analysis" href="'.SUMA_REPORTS_URL.'/#/hourly?id='.$init.'&sdate='.$date.'&edate='.$date.'&classifyCounts=count&wholeSession=no&zeroCounts=no&requireActs=&excludeActs=&requireActGrps=&excludeActGrps=&excludeLocs=&days=mo,tu,we,th,fr,sa,su" class="button">Examine Day in Suma Reports</a>'.PHP_EOL;
+    print '<form action="?" method="post"><input type="hidden" name="date_search" value="'.$next_date.'"><input type="submit" value="'.$next_date.' &raquo;" class="button"></form>'.PHP_EOL;
 }
 else {
     $next_offset_older = $offset+$entries_per_page;
-    print '<form action="?" method="post"><input type="hidden" name="offset" value="'.$next_offset_older.'"><input type="submit" value="Previous '.$entries_per_page.' Entries"></form>'.PHP_EOL;
+    print '<form action="?" method="post"><input type="hidden" name="offset" value="'.$next_offset_older.'"><input type="submit" value="&laquo; Previous '.$entries_per_page.' Entries" class="button"></form>'.PHP_EOL;
     
     if ($offset > 0) { 
         $next_offset_newer = $offset-$entries_per_page;
         if ($next_offset_newer < 0) { $next_offset_newer = 0; }
-        print '<form action="?" method="post"><input type="hidden" name="offset" value="'.$next_offset_newer.'"><input type="submit" value="Next Newer '.$entries_per_page.' Entries"></form>'.PHP_EOL;
+        print '<form action="?" method="post"><input type="hidden" name="offset" value="'.$next_offset_newer.'"><input type="submit" value="Next Newer '.$entries_per_page.' Entries &raquo;" class="button"></form>'.PHP_EOL;
     }
 }
 
@@ -50,10 +50,10 @@ while ($myrow = mysql_fetch_assoc($r)) {
         $rows .= '  <td class="'.$k.'">'.$myrow[$k].'</td>'.PHP_EOL;
     }
     if ($myrow['deleted'] == 0) {
-        $rows .= '<td><form action="?" method="post"><input type="hidden" name="action" value="delete_session"><input type="hidden" name="session_id" value="' .$myrow['id'] .'">'.HiddenFieldsForDateSearch().'<input type="submit" value="Delete"></form></td>'.PHP_EOL;
+        $rows .= '<td><form action="?" method="post"><input type="hidden" name="action" value="delete_session"><input type="hidden" name="session_id" value="' .$myrow['id'] .'">'.HiddenFieldsForDateSearch().'<input type="submit" value="Delete" class="button"></form></td>'.PHP_EOL;
     }
     elseif ($myrow['deleted'] == 1) {
-        $rows .= '<td><form action="?" method="post"><input type="hidden" name="action" value="undelete_session"><input type="hidden" name="session_id" value="' .$myrow['id'] .'">'.HiddenFieldsForDateSearch().'<input type="submit" value="Undelete"></form></td>'.PHP_EOL;
+        $rows .= '<td><form action="?" method="post"><input type="hidden" name="action" value="undelete_session"><input type="hidden" name="session_id" value="' .$myrow['id'] .'">'.HiddenFieldsForDateSearch().'<input type="submit" value="Undelete" class="button"></form></td>'.PHP_EOL;
     }
     $rows .= '  <td><form action="?" method="post"><input type="hidden" name="action" value="move_session"><input type="hidden" name="session_id" value="' .$myrow['id'] .'">'.HiddenFieldsForDateSearch().'<input type="hidden" name="transaction_id" value="'. $myrow['fk_transaction'] .'">Adjust Time by: ' . DisplayAdjustor() . '</form></td>'. PHP_EOL;
     $rows .= ' </tr>'.PHP_EOL;
@@ -73,7 +73,7 @@ function DisplayAdjustor() {
         $select .= "<option value=\"$val\">$disp</option>\n";
     }
 
-    return '<select class="row-select" name="time_shift">'.$select.'</select> <button class="adjust-time">Go</button>'.PHP_EOL; 
+    return '<select class="row-select" name="time_shift">'.$select.'</select> <button class="adjust-time button">Go</button>'.PHP_EOL; 
 }
 
 function HiddenFieldsForDateSearch() { //used by ShowEntries
