@@ -120,7 +120,7 @@ function DeleteUndelete($action, $id) {
 
 
 function ShowMultiHours($init) {
-    $q = "SELECT CONCAT( DATE(`start`) , ' ', HOUR(`start`) ) AS DateHour, count( * ) AS HourCount FROM `session` WHERE fk_initiative = '".$init."' GROUP BY HOUR(`start`) , DATE(`start`) HAVING HourCount > 1 ORDER BY DateHour DESC";
+    $q = "SELECT CONCAT( DATE(`start`) , ' ', HOUR(`start`) ) AS DateHour, count( * ) AS HourCount FROM `session` WHERE fk_initiative = '".$init."' and deleted = 0 GROUP BY HOUR(`start`) , DATE(`start`) HAVING HourCount > 1 ORDER BY DateHour DESC";
     PrintQuery($q);
     $r = mysql_query($q);
     if (mysql_num_rows($r) == 0) {
