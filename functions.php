@@ -11,6 +11,7 @@ function ShowEntries ($init, $offset=0, $entries_per_page=60, $and_where="", $ho
 
 //display forward and back controls by date or by sessions
 if (isset($_REQUEST['date_search'])) {
+    print '<h2>Sessions for '.date("l, F j, Y",strtotime($_REQUEST['date_search'])).'</h2>'.PHP_EOL;
     list ($year, $month, $day) = preg_split ("/\-/", $_REQUEST['date_search']);
     if (isset($day) && strlen($day)==2) {
         $date = $_REQUEST['date_search'];
@@ -20,7 +21,7 @@ if (isset($_REQUEST['date_search'])) {
     else { $date = ''; } // don't set date if not a fully qualified date
 
     print '<form action="?" method="post"><input type="hidden" name="date_search" value="'.$previous_date.'"><input type="submit" value="&laquo; '.$previous_date.'" class="button"></form>'.PHP_EOL;
-    print '<a target="suma_analysis" href="'.SUMA_REPORTS_URL.'/#/hourly?id='.$init.'&sdate='.$date.'&edate='.$date.'&classifyCounts=count&wholeSession=no&zeroCounts=no&requireActs=&excludeActs=&requireActGrps=&excludeActGrps=&excludeLocs=&days=mo,tu,we,th,fr,sa,su" class="button">Examine Day in Suma Reports</a>'.PHP_EOL;
+    print '<a target="suma_analysis" href="'.SUMA_REPORTS_URL.'/#/hourly?id='.$init.'&sdate='.$date.'&edate='.$date.'&classifyCounts=count&wholeSession=no&zeroCounts=no&requireActs=&excludeActs=&requireActGrps=&excludeActGrps=&excludeLocs=&days=mo,tu,we,th,fr,sa,su" class="button">Examine Day in Suma Reports: '.$date.'</a>'.PHP_EOL;
     print '<form action="?" method="post"><input type="hidden" name="date_search" value="'.$next_date.'"><input type="submit" value="'.$next_date.' &raquo;" class="button"></form>'.PHP_EOL;
 }
 else {
