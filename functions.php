@@ -83,6 +83,7 @@ function HiddenFieldsForDateSearch() { //used by ShowEntries
     if (isset($_REQUEST['hour_focus'])) {
         $fields .= '<input type="hidden" name="hour_focus" value="'.$_REQUEST['hour_focus'].'">'.PHP_EOL;
     }
+    return $fields;
 }
 
 
