@@ -48,6 +48,9 @@ include ("config.php");
 include ("functions.php");
 
 if (DEBUG === true) {
+  error_reporting(E_ALL);
+  ini_set("display_errors", true);
+
     var_dump($_REQUEST);
         print "<p></p>".PHP_EOL;
 }
