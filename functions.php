@@ -12,13 +12,17 @@ function PrintQuery($q) {
 }
 
 function ShowEntries ($init, $offset=0, $entries_per_page=60, $and_where="", $hour_focus="") { 
+    if (isset($and_where)) {
+        $and_where_injector = $and_where;
+    }
     try {
         $db = ConnectPDO();
-        //        $q = 'SELECT `session`.*,count(`number`) as Counts FROM `session`,`count` WHERE session.fk_initiative = '.$init.' AND session.id = count.fk_session AND count.number = 1 '. $and_where .' GROUP BY fk_session ORDER BY `session`.`id` DESC LIMIT '.$offset.','.$entries_per_page;
-        $q = 'SELECT `session`.*,count(`number`) as Counts FROM `session`,`count` WHERE session.fk_initiative = :init AND session.id = count.fk_session AND count.number = 1 :and_where GROUP BY fk_session ORDER BY `session`.`id` DESC LIMIT :offset, :entries_per_page';
+        $q = 'SELECT `session`.*,count(`number`) as Counts FROM `session`,`count` WHERE session.fk_initiative = :init AND session.id = count.fk_session AND count.number = 1 '.$and_where_injector.'GROUP BY fk_session ORDER BY `session`.`id` DESC LIMIT :offset, :entries_per_page';
         $stmt = $db->prepare($q);
         $stmt->bindParam(':init', $init, PDO::PARAM_INT);
-        $stmt->bindParam(':and_where', $and_where, PDO::PARAM_STR);
+        if (isset($and_where))  {
+            $stmt->bindParam(':and_where', $and_where, PDO::PARAM_STR);
+        }
         $stmt->bindParam(':offset', $offset, PDO::PARAM_INT);
         $stmt->bindParam(':entries_per_page', $entries_per_page, PDO::PARAM_INT);
         $stmt->execute();
