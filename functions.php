@@ -141,17 +141,25 @@ function MoveSession($session_id, $transaction_id, $time_shift) {
 }
 
 
-
 function DeleteUndelete($action, $id) {
     if ($action == "delete") { $dvalue = 1; }
     elseif ($action == "undelete") { $dvalue = 0; }
-    $q = 'UPDATE session SET `deleted` = '.$dvalue.' WHERE `id` = "'.$id.'"';
-
-    if (mysql_query($q)) {
-        print '<p>SUCCESS: '.$q.'</p>'.PHP_EOL;
-    }
-    else {
-        print '<p>FAILED TO EXECUTE: '. $q .'</p>'.PHP_EOL;
+    
+    try {
+        $db = ConnectPDO();
+        $q = 'UPDATE session SET `deleted` = :dvalue WHERE `id` = :id';
+        $stmt = $db->prepare($q);
+        $stmt->bindParam(':dvalue',$dvalue, PDO::PARAM_INT);
+        $stmt->bindParam(':id',$id, PDO::PARAM_INT);
+        if ($stmt->execute()) {
+            print '<p>SUCCESS: '.$q.'</p>'.PHP_EOL;
+        }
+        else {
+            print '<p>FAILED TO EXECUTE: '. $q .'</p>'.PHP_EOL;
+        }
+    } catch(PDOException $ex) {
+        echo "An Error occured!"; //user friendly message
+        echo ($ex->getMessage());
     }
 } //end function DeleteUndelete
 
