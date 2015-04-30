@@ -99,6 +99,7 @@ function DisplayAdjustor() {
 }
 
 function HiddenFieldsForDateSearch() { //used by ShowEntries
+    $fields = "";
     if (isset($_REQUEST['date_search'])) {
         $fields = '<input type="hidden" name="date_search" value="'.$_REQUEST['date_search'].'">'.PHP_EOL;
     }
@@ -108,22 +109,37 @@ function HiddenFieldsForDateSearch() { //used by ShowEntries
     return $fields;
 }
 
-
 function MoveSession($session_id, $transaction_id, $time_shift) {
     list($action, $hms) = split(" ", $time_shift);
-    $q1 = 'UPDATE `session` SET `start` = '.$action.' (`start`, "'.$hms.'"), `end` = '.$action.'(`end`, "'.$hms.'") WHERE `id` = "'.$session_id.'"';
-    $q2 = 'UPDATE `transaction` SET `start` = '.$action.' (`start`, "'.$hms.'"), `end` = '.$action.'(`end`, "'.$hms.'") WHERE `id` = "'.$transaction_id.'"';
-    $q3 = 'UPDATE `count` SET `occurrence` = '.$action.' (`occurrence`, "'.$hms.'") WHERE `fk_session` = "'.$session_id.'"';
-    $queries = array ($q1,$q2,$q3);
-    foreach ($queries as $q) {
-        if (mysql_query($q)) {
-            print '<li>SUCCESS: '.$q.'</li>'.PHP_EOL;
-        }
-        else {
-            print '<li>FAILED TO EXECUTE: '. $q .'</li>'.PHP_EOL;
-        }   
+    try {
+        $db = ConnectPDO();
+        
+        $q1 = 'UPDATE `session` SET `start` = '.$action.' (`start`, :hms), `end` = '.$action.' (`end`, :hms) WHERE `id` = :session_id';
+        $stmt = $db->prepare($q1);
+        $stmt->bindParam(':hms', $hms, PDO::PARAM_STR);
+        $stmt->bindParam(':session_id', $session_id, PDO::PARAM_STR);
+        if ($stmt->execute()) { print '<li>SUCCESS: Updated session table</li>'.PHP_EOL;}
+        else { print ($stmt->errorCode()); }
+
+        $q2 = 'UPDATE `transaction` SET `start` = '.$action.' (`start`, :hms), `end` = '.$action.' (`end`, :hms) WHERE `id` = :transaction_id';
+        $stmt = $db->prepare($q2);
+        $stmt->bindParam(':hms', $hms, PDO::PARAM_STR);
+        $stmt->bindParam(':transaction_id', $transaction_id, PDO::PARAM_STR);
+        if ($stmt->execute()) { print '<li>SUCCESS: Updated transaction table</li>'.PHP_EOL;}
+        else { print ($stmt->errorCode()); }
+
+        $q3 = 'UPDATE `count` SET `occurrence` = '.$action.' (`occurrence`, :hms) WHERE `fk_session` = :session_id';
+        $stmt = $db->prepare($q3);
+        $stmt->bindParam(':hms', $hms, PDO::PARAM_STR);
+        $stmt->bindParam(':session_id', $session_id, PDO::PARAM_STR);
+        if ($stmt->execute()) { print '<li>SUCCESS: Updated count table</li>'.PHP_EOL;}
+        else { print ($stmt->errorCode()); }
+    } catch(PDOException $ex) {
+        echo "An Error occured!"; //user friendly message
+        echo ($ex->getMessage());
     }
 }
+
 
 
 function DeleteUndelete($action, $id) {
