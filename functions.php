@@ -1,4 +1,10 @@
 <?
+function ConnectPDO () {
+    $db = new PDO('mysql:'.MYSQL_HOST.'=localhost;dbname='.MYSQL_DATABASE.';charset=utf8', MYSQL_USER, MYSQL_PASSWORD);
+    $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    return $db;
+}
+
 function PrintQuery($q) {
     if (DEBUG === true) {
         print "<p>$q</p>\n";
@@ -36,16 +42,17 @@ else {
 }
 
 
-$r = mysql_query($q);
+//$r = mysql_query($q);
+$db = ConnectPDO();
 
-
-while ($myrow = mysql_fetch_assoc($r)) {
+$r = $db->query($q);
+while ($myrow = $r->fetch(PDO::FETCH_ASSOC)) {
     $headers = array_keys($myrow);
     if (isset($hour_focus) && (preg_match("/$hour_focus/", $myrow['start']))) {
         $class = ' class="hour-focus"';
     }
     else { $class =''; }
-
+    
     $rows .= ' <tr'.$class.'>'.PHP_EOL;
     foreach ($headers as $k) {
         $rows .= '  <td class="'.$k.'">'.$myrow[$k].'</td>'.PHP_EOL;
@@ -58,7 +65,7 @@ while ($myrow = mysql_fetch_assoc($r)) {
     }
     $rows .= '  <td><form action="?" method="post"><input type="hidden" name="action" value="move_session"><input type="hidden" name="session_id" value="' .$myrow['id'] .'">'.HiddenFieldsForDateSearch().'<input type="hidden" name="transaction_id" value="'. $myrow['fk_transaction'] .'">Adjust Time by: ' . DisplayAdjustor() . '</form></td>'. PHP_EOL;
     $rows .= ' </tr>'.PHP_EOL;
-} // end while myrow
+} // end foreach query as myrow
 $header = join('</th><th>',$headers);
 $header = '<tr><th>'.$header.'</th></tr>'.PHP_EOL;
 $rows = '<table>'. $header . $rows .'</table>'.PHP_EOL;

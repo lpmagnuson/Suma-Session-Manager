@@ -52,9 +52,6 @@ if (DEBUG === true) {
         print "<p></p>".PHP_EOL;
 }
 
-$dblink = mysql_pconnect($mysql_host,$mysql_user,$mysql_password) or die ("cannot connect");
-mysql_select_db($mysql_database,$dblink) or die ("cannot select database");
-
 if (! is_readable("config.php")) {
     print '<div class="alert"><h3>Config file not readable</h3><p>The file <strong>config.php</strong> is not present or not readable. Please copy the file <strong>config-sample.php</strong> to <strong>config.php</strong> and add your local Suma Server URL to activate this service.</p></div>';
 }
