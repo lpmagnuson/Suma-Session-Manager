@@ -1,8 +1,21 @@
 <? 
 session_start(); 
+include ("config.php");
+require ("andwhere.class.php");
+include ("functions.php");
+
+if (DEBUG === true) {
+  error_reporting(E_WARN);
+  ini_set("display_errors", true);
+
+    var_dump($_REQUEST);
+        print "<p></p>".PHP_EOL;
+}
+
 if (isset($_REQUEST['set_init'])) {
     $_SESSION['current_init'] = $_REQUEST['set_init'];
 }
+
 
 ?>
 <html>
@@ -26,6 +39,18 @@ form { display: inline }
                      var init = $(this).val();
                      window.location.replace('?set_init='+init);
                  });
+             $( "#datepicker" ).datepicker({
+                 showOn: "button",
+                         dateFormat: "yy-mm-dd",
+                         buttonImage: "calendar.gif",
+                         buttonImageOnly: true,
+                         buttonText: "Select date",
+                         altField: '#date-search',
+                         onSelect: function() {
+                         $('#date-select-form').submit();
+                     }
+
+                         });
              $('tr').mousedown(function() {
                      $(this).parent().children().removeClass('highlight');
                      $(this).addClass('highlight');
@@ -45,17 +70,6 @@ form { display: inline }
 <div id="content">
 <h1>Suma Session Manager</h1>
 <?
-include ("config.php");
-require ("andwhere.class.php");
-include ("functions.php");
-
-if (DEBUG === true) {
-  error_reporting(E_WARN);
-  ini_set("display_errors", true);
-
-    var_dump($_REQUEST);
-        print "<p></p>".PHP_EOL;
-}
 
 if (! is_readable("config.php")) {
     print '<div class="alert"><h3>Config file not readable</h3><p>The file <strong>config.php</strong> is not present or not readable. Please copy the file <strong>config-sample.php</strong> to <strong>config.php</strong> and add your local Suma Server URL to activate this service.</p></div>';

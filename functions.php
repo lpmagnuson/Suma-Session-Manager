@@ -52,8 +52,13 @@ function ShowEntries ($init, $offset=0, $entries_per_page=60, $and_where, $hour_
             }
         }
         
-
-        
+        // Display Date-Picker
+?>
+<form id="date-select-form" class="button">
+     <span>Select Any Date: <input type="hidden" id="datepicker" /></span>
+<input type="hidden" id="date-search" name="date_search" />
+</form>
+  <?      
         
         while ($myrow = $stmt->fetch(PDO::FETCH_ASSOC)) {
             $headers = array_keys($myrow);
