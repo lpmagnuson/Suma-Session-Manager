@@ -48,7 +48,7 @@ include ("config.php");
 include ("functions.php");
 
 if (DEBUG === true) {
-  error_reporting(E_ALL);
+  error_reporting(E_WARN);
   ini_set("display_errors", true);
 
     var_dump($_REQUEST);
