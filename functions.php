@@ -165,37 +165,41 @@ function DeleteUndelete($action, $id) {
 
 
 function ShowMultiHours($init) {
-    $db = ConnectPDO();
-    $q = "SELECT CONCAT( DATE(`start`) , ' ', HOUR(`start`) ) AS DateHour, count( * ) AS HourCount FROM `session` WHERE fk_initiative = '".$init."' and deleted = 0 GROUP BY HOUR(`start`) , DATE(`start`) HAVING HourCount > 1 ORDER BY DateHour DESC";
-    $stmt = $db->prepare($q);
-    $stmt->execute();
-
-    if ($stmt->rowCount() == 0) {
+    try { 
+        $db = ConnectPDO();
+        $q = "SELECT CONCAT( DATE(`start`) , ' ', HOUR(`start`) ) AS DateHour, count( * ) AS HourCount FROM `session` WHERE fk_initiative = '".$init."' and deleted = 0 GROUP BY HOUR(`start`) , DATE(`start`) HAVING HourCount > 1 ORDER BY DateHour DESC";
+        $stmt = $db->prepare($q);
+        $stmt->execute();
+        
+        if ($stmt->rowCount() == 0) {
         print '<p>No hours with multiple entries found</p>';
-    }
-    else {
-        while ($myrow = $stmt->fetch(PDO::FETCH_ASSOC)) {
-            if (! ($headers)) 
-                $headers = array_keys($myrow);
-            $rows .=  '<tr>'.PHP_EOL;
-            foreach ($headers as $k) {
-                if ($k == "DateHour") {
-                    list ($date,$hour) = preg_split("/ /",$myrow[$k]);
-                    if ($hour < 10) { $display_hour = '0'.$hour; }
-                    else { $display_hour = $hour; }
-                    $myrow[$k] = '<a href="?date_search='.$date.'&hour_focus='.$date.' '.$display_hour.'">' .$date. ' '.$display_hour.'00</a>';
+        }
+        else {
+            while ($myrow = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                if (! ($headers)) 
+                    $headers = array_keys($myrow);
+                $rows .=  '<tr>'.PHP_EOL;
+                foreach ($headers as $k) {
+                    if ($k == "DateHour") {
+                        list ($date,$hour) = preg_split("/ /",$myrow[$k]);
+                        if ($hour < 10) { $display_hour = '0'.$hour; }
+                        else { $display_hour = $hour; }
+                        $myrow[$k] = '<a href="?date_search='.$date.'&hour_focus='.$date.' '.$display_hour.'">' .$date. ' '.$display_hour.'00</a>';
+                    }
+                    $rows .= '  <td class="'.$k.'">'.$myrow[$k].'</td>'.PHP_EOL;
                 }
-                $rows .= '  <td class="'.$k.'">'.$myrow[$k].'</td>'.PHP_EOL;
-            }
-            $rows .= ' </tr>'.PHP_EOL;
-        } // end while myrow
-        $header = join('</th><th>',$headers);
-        $header = '<tr><th>'.$header.'</th></tr>'.PHP_EOL;
-        if ($table_id != '') { $id = ' id="'.$table_id.'"'; }
-        $rows = '<table id="multi-hours">'.$header.$rows.'</table>'.PHP_EOL;
-        print($rows);
+                $rows .= ' </tr>'.PHP_EOL;
+            } // end while myrow
+            $header = join('</th><th>',$headers);
+            $header = '<tr><th>'.$header.'</th></tr>'.PHP_EOL;
+            if ($table_id != '') { $id = ' id="'.$table_id.'"'; }
+            $rows = '<table id="multi-hours">'.$header.$rows.'</table>'.PHP_EOL;
+            print($rows);
+        }
+    } catch(PDOException $ex) {
+        echo "An Error occured!"; //user friendly message
+        echo ($ex->getMessage());
     }
-
 } //end ShowMutliHours
 
 
