@@ -88,7 +88,7 @@ elseif ($_REQUEST['action'] == "undelete_session") {
 
 if (isset($_REQUEST['date_search'])) {
     //    $and_where = "AND `start` LIKE '".$_REQUEST['date_search']."%'";
-    $and_where = new AndWhere();
+    $and_where = new AndWherePDO();
     $and_where->AddCondition('start',$_REQUEST['date_search'].'%','LIKE');
 }
 ?>
