@@ -5,17 +5,10 @@ function ConnectPDO () {
     return $db;
 }
 
-function PrintQuery($q) {
-    if (DEBUG === true) {
-        print "<p>$q</p>\n";
-    }
-}
-
 function ShowEntries ($init, $offset=0, $entries_per_page=60, $and_where, $hour_focus="") { 
 
     if (is_object($and_where)) {
         $and_where_string = $and_where->AndWhereString();
-        print_r($and_where);
     }
     else {
         $and_where_string = "";

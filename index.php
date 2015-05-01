@@ -90,7 +90,6 @@ if (isset($_REQUEST['date_search'])) {
     //    $and_where = "AND `start` LIKE '".$_REQUEST['date_search']."%'";
     $and_where = new AndWhere();
     $and_where->AddCondition('start',$_REQUEST['date_search'].'%','LIKE');
-    //print ($and_where->AndWhereString());
 }
 ?>
 
