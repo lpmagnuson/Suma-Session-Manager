@@ -165,14 +165,16 @@ function DeleteUndelete($action, $id) {
 
 
 function ShowMultiHours($init) {
+    $db = ConnectPDO();
     $q = "SELECT CONCAT( DATE(`start`) , ' ', HOUR(`start`) ) AS DateHour, count( * ) AS HourCount FROM `session` WHERE fk_initiative = '".$init."' and deleted = 0 GROUP BY HOUR(`start`) , DATE(`start`) HAVING HourCount > 1 ORDER BY DateHour DESC";
-    PrintQuery($q);
-    $r = mysql_query($q);
-    if (mysql_num_rows($r) == 0) {
+    $stmt = $db->prepare($q);
+    $stmt->execute();
+
+    if ($stmt->rowCount() == 0) {
         print '<p>No hours with multiple entries found</p>';
     }
     else {
-        while ($myrow = mysql_fetch_assoc($r)) {
+        while ($myrow = $stmt->fetch(PDO::FETCH_ASSOC)) {
             if (! ($headers)) 
                 $headers = array_keys($myrow);
             $rows .=  '<tr>'.PHP_EOL;
@@ -193,7 +195,8 @@ function ShowMultiHours($init) {
         $rows = '<table id="multi-hours">'.$header.$rows.'</table>'.PHP_EOL;
         print($rows);
     }
-}
+
+} //end ShowMutliHours
 
 
 function SelectInitiative($default_init) {
