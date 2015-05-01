@@ -11,75 +11,81 @@ function PrintQuery($q) {
     }
 }
 
-function ShowEntries ($init, $offset=0, $entries_per_page=60, $and_where="", $hour_focus="") { 
-    if (isset($and_where)) {
-        $and_where_injector = $and_where;
+function ShowEntries ($init, $offset=0, $entries_per_page=60, $and_where, $hour_focus="") { 
+
+    if (is_object($and_where)) {
+        $and_where_string = $and_where->AndWhereString();
+        print_r($and_where);
     }
+    else {
+        $and_where_string = "";
+    }
+
     try {
         $db = ConnectPDO();
-        $q = 'SELECT `session`.*,count(`number`) as Counts FROM `session`,`count` WHERE session.fk_initiative = :init AND session.id = count.fk_session AND count.number = 1 '.$and_where_injector.'GROUP BY fk_session ORDER BY `session`.`id` DESC LIMIT :offset, :entries_per_page';
+        $q = 'SELECT `session`.*,count(`number`) as Counts FROM `session`,`count` WHERE session.fk_initiative = :init AND session.id = count.fk_session AND count.number = 1 '.$and_where_string.' GROUP BY fk_session ORDER BY `session`.`id` DESC LIMIT :offset, :entries_per_page';
         $stmt = $db->prepare($q);
         $stmt->bindParam(':init', $init, PDO::PARAM_INT);
-        if (isset($and_where))  {
-            $stmt->bindParam(':and_where', $and_where, PDO::PARAM_STR);
+        if (is_object($and_where))  {
+            $stmt = $and_where->Bind($stmt);
         }
         $stmt->bindParam(':offset', $offset, PDO::PARAM_INT);
         $stmt->bindParam(':entries_per_page', $entries_per_page, PDO::PARAM_INT);
         $stmt->execute();
+        
+        //display forward and back controls by date or by sessions
+        if (isset($_REQUEST['date_search'])) {
+            print '<h2>Sessions for '.date("l, F j, Y",strtotime($_REQUEST['date_search'])).'</h2>'.PHP_EOL;
+            list ($year, $month, $day) = preg_split ("/\-/", $_REQUEST['date_search']);
+            if (isset($day) && strlen($day)==2) {
+                $date = $_REQUEST['date_search'];
+                $next_date= date("Y-m-d", strtotime($date . '+ 1 day'));
+                $previous_date= date("Y-m-d", strtotime($date . '- 1 day'));
+            }
+            else { $date = ''; } // don't set date if not a fully qualified date
+            
+            print '<form action="?" method="post"><input type="hidden" name="date_search" value="'.$previous_date.'"><input type="submit" value="&laquo; '.$previous_date.'" class="button"></form>'.PHP_EOL;
+            print '<a target="suma_analysis" href="'.SUMA_REPORTS_URL.'/#/hourly?id='.$init.'&sdate='.$date.'&edate='.$date.'&classifyCounts=count&wholeSession=no&zeroCounts=no&requireActs=&excludeActs=&requireActGrps=&excludeActGrps=&excludeLocs=&days=mo,tu,we,th,fr,sa,su" class="button">Examine Day in Suma Reports: '.$date.'</a>'.PHP_EOL;
+            print '<form action="?" method="post"><input type="hidden" name="date_search" value="'.$next_date.'"><input type="submit" value="'.$next_date.' &raquo;" class="button"></form>'.PHP_EOL;
+        }
+        else {
+            $next_offset_older = $offset+$entries_per_page;
+            print '<form action="?" method="post"><input type="hidden" name="offset" value="'.$next_offset_older.'"><input type="submit" value="&laquo; Previous '.$entries_per_page.' Entries" class="button"></form>'.PHP_EOL;
+            
+            if ($offset > 0) { 
+                $next_offset_newer = $offset-$entries_per_page;
+                if ($next_offset_newer < 0) { $next_offset_newer = 0; }
+                print '<form action="?" method="post"><input type="hidden" name="offset" value="'.$next_offset_newer.'"><input type="submit" value="Next Newer '.$entries_per_page.' Entries &raquo;" class="button"></form>'.PHP_EOL;
+            }
+        }
+        
 
-//display forward and back controls by date or by sessions
-if (isset($_REQUEST['date_search'])) {
-    print '<h2>Sessions for '.date("l, F j, Y",strtotime($_REQUEST['date_search'])).'</h2>'.PHP_EOL;
-    list ($year, $month, $day) = preg_split ("/\-/", $_REQUEST['date_search']);
-    if (isset($day) && strlen($day)==2) {
-        $date = $_REQUEST['date_search'];
-        $next_date= date("Y-m-d", strtotime($date . '+ 1 day'));
-        $previous_date= date("Y-m-d", strtotime($date . '- 1 day'));
-    }
-    else { $date = ''; } // don't set date if not a fully qualified date
-
-    print '<form action="?" method="post"><input type="hidden" name="date_search" value="'.$previous_date.'"><input type="submit" value="&laquo; '.$previous_date.'" class="button"></form>'.PHP_EOL;
-    print '<a target="suma_analysis" href="'.SUMA_REPORTS_URL.'/#/hourly?id='.$init.'&sdate='.$date.'&edate='.$date.'&classifyCounts=count&wholeSession=no&zeroCounts=no&requireActs=&excludeActs=&requireActGrps=&excludeActGrps=&excludeLocs=&days=mo,tu,we,th,fr,sa,su" class="button">Examine Day in Suma Reports: '.$date.'</a>'.PHP_EOL;
-    print '<form action="?" method="post"><input type="hidden" name="date_search" value="'.$next_date.'"><input type="submit" value="'.$next_date.' &raquo;" class="button"></form>'.PHP_EOL;
-}
-else {
-    $next_offset_older = $offset+$entries_per_page;
-    print '<form action="?" method="post"><input type="hidden" name="offset" value="'.$next_offset_older.'"><input type="submit" value="&laquo; Previous '.$entries_per_page.' Entries" class="button"></form>'.PHP_EOL;
-    
-    if ($offset > 0) { 
-        $next_offset_newer = $offset-$entries_per_page;
-        if ($next_offset_newer < 0) { $next_offset_newer = 0; }
-        print '<form action="?" method="post"><input type="hidden" name="offset" value="'.$next_offset_newer.'"><input type="submit" value="Next Newer '.$entries_per_page.' Entries &raquo;" class="button"></form>'.PHP_EOL;
-    }
-}
-
-
-
-
-while ($myrow = $stmt->fetch(PDO::FETCH_ASSOC)) {
-    $headers = array_keys($myrow);
-    if (isset($hour_focus) && (preg_match("/$hour_focus/", $myrow['start']))) {
-        $class = ' class="hour-focus"';
-    }
-    else { $class =''; }
-    
-    $rows .= ' <tr'.$class.'>'.PHP_EOL;
-    foreach ($headers as $k) {
-        $rows .= '  <td class="'.$k.'">'.$myrow[$k].'</td>'.PHP_EOL;
-    }
-    if ($myrow['deleted'] == 0) {
-        $rows .= '<td><form action="?" method="post"><input type="hidden" name="action" value="delete_session"><input type="hidden" name="session_id" value="' .$myrow['id'] .'">'.HiddenFieldsForDateSearch().'<input type="submit" value="Delete" class="button"></form></td>'.PHP_EOL;
-    }
-    elseif ($myrow['deleted'] == 1) {
-        $rows .= '<td><form action="?" method="post"><input type="hidden" name="action" value="undelete_session"><input type="hidden" name="session_id" value="' .$myrow['id'] .'">'.HiddenFieldsForDateSearch().'<input type="submit" value="Undelete" class="button"></form></td>'.PHP_EOL;
-    }
-    $rows .= '  <td><form action="?" method="post"><input type="hidden" name="action" value="move_session"><input type="hidden" name="session_id" value="' .$myrow['id'] .'">'.HiddenFieldsForDateSearch().'<input type="hidden" name="transaction_id" value="'. $myrow['fk_transaction'] .'">Adjust Time by: ' . DisplayAdjustor() . '</form></td>'. PHP_EOL;
-    $rows .= ' </tr>'.PHP_EOL;
-} // end foreach query as myrow
-$header = join('</th><th>',$headers);
-$header = '<tr><th>'.$header.'</th></tr>'.PHP_EOL;
-$rows = '<table>'. $header . $rows .'</table>'.PHP_EOL;
-print ($rows);
+        
+        
+        while ($myrow = $stmt->fetch(PDO::FETCH_ASSOC)) {
+            $headers = array_keys($myrow);
+            if (isset($hour_focus) && (preg_match("/$hour_focus/", $myrow['start']))) {
+                $class = ' class="hour-focus"';
+            }
+            else { $class =''; }
+            
+            $rows .= ' <tr'.$class.'>'.PHP_EOL;
+            foreach ($headers as $k) {
+                $rows .= '  <td class="'.$k.'">'.$myrow[$k].'</td>'.PHP_EOL;
+            }
+            if ($myrow['deleted'] == 0) {
+                $rows .= '<td><form action="?" method="post"><input type="hidden" name="action" value="delete_session"><input type="hidden" name="session_id" value="' .$myrow['id'] .'">'.HiddenFieldsForDateSearch().'<input type="submit" value="Delete" class="button"></form></td>'.PHP_EOL;
+            }
+            elseif ($myrow['deleted'] == 1) {
+                $rows .= '<td><form action="?" method="post"><input type="hidden" name="action" value="undelete_session"><input type="hidden" name="session_id" value="' .$myrow['id'] .'">'.HiddenFieldsForDateSearch().'<input type="submit" value="Undelete" class="button"></form></td>'.PHP_EOL;
+            }
+            $rows .= '  <td><form action="?" method="post"><input type="hidden" name="action" value="move_session"><input type="hidden" name="session_id" value="' .$myrow['id'] .'">'.HiddenFieldsForDateSearch().'<input type="hidden" name="transaction_id" value="'. $myrow['fk_transaction'] .'">Adjust Time by: ' . DisplayAdjustor() . '</form></td>'. PHP_EOL;
+            $rows .= ' </tr>'.PHP_EOL;
+        } // end foreach query as myrow
+        $header = join('</th><th>',$headers);
+        $header = '<tr><th>'.$header.'</th></tr>'.PHP_EOL;
+        $rows = '<table>'. $header . $rows .'</table>'.PHP_EOL;
+        print ($rows);
     } catch(PDOException $ex) {
         echo "An Error occured!"; //user friendly message
         echo ($ex->getMessage());

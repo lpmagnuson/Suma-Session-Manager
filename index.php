@@ -3,6 +3,7 @@ session_start();
 if (isset($_REQUEST['set_init'])) {
     $_SESSION['current_init'] = $_REQUEST['set_init'];
 }
+
 ?>
 <html>
 <head>
@@ -45,6 +46,7 @@ form { display: inline }
 <h1>Suma Session Manager</h1>
 <?
 include ("config.php");
+require ("andwhere.class.php");
 include ("functions.php");
 
 if (DEBUG === true) {
@@ -85,7 +87,10 @@ elseif ($_REQUEST['action'] == "undelete_session") {
 }
 
 if (isset($_REQUEST['date_search'])) {
-    $and_where = "AND `start` LIKE '".$_REQUEST['date_search']."%'";
+    //    $and_where = "AND `start` LIKE '".$_REQUEST['date_search']."%'";
+    $and_where = new AndWhere();
+    $and_where->AddCondition('start',$_REQUEST['date_search'].'%','LIKE');
+    //print ($and_where->AndWhereString());
 }
 ?>
 
