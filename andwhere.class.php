@@ -11,10 +11,10 @@ class AndWhere {
         
         switch ($type) {
         case 'str': 
-            $this->param_type = PDO::PARAM_STR;
+            $param_type = PDO::PARAM_STR;
             break;
         case 'int': 
-            $this->param_type = PDO::PARAM_INT;
+            $param_type = PDO::PARAM_INT;
             break;
         }
 
