@@ -2,7 +2,7 @@
 session_start(); 
 include ("config.php");
 require ("andwhere.class.php");
-include ("functions.php");
+include ("scripts.php");
 
 if (DEBUG === true) {
   error_reporting(E_WARN);
@@ -121,6 +121,7 @@ if (isset($_REQUEST['date_search'])) {
         print '<li><a href="#tabs-multi">Hours with Multiple Sessions</a></li>'.PHP_EOL;
     }
 ?>
+ <li><a href="#tabs-readme">Documentation</a></li>
  </ul>
 
  <div id="tabs-sessions">
@@ -135,8 +136,18 @@ if (isset($_REQUEST['date_search'])) {
         print '  <div id="tabs-multi">'.PHP_EOL;
         ShowMultiHours($_SESSION['current_init']);
         print '  </div><!--id=tabs-multi-->'.PHP_EOL;
-        print ' </div><!--id=tabs-->'.PHP_EOL;
     }
+
+//print README file in Documentation Tab
+print '<div id="tabs-readme">'.PHP_EOL;
+$file = file_get_contents("README.md");
+// crop the first line out so we can use customized header
+$lines = explode("\n", $file);
+$file = implode("\n", array_slice($lines, 2));
+print (RenderMarkdown($file));
+print '</div><!--id=readme-->'.PHP_EOL;
+
+print ' </div><!--id=tabs-->'.PHP_EOL;
 print "</div><!--id=content-->\n";
 
 print '<div id="footer">';
