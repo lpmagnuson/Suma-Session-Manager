@@ -39,12 +39,14 @@ form { display: inline }
                      var init = $(this).val();
                      window.location.replace('?set_init='+init);
                  });
+             $( "#dp-text").click(function() {
+                     $('#datepicker').datepicker('show');
+                 });
              $( "#datepicker" ).datepicker({
                  showOn: "button",
-                         dateFormat: "yy-mm-dd",
-                         buttonImage: "calendar.gif",
                          buttonImageOnly: true,
-                         buttonText: "Select date",
+                         buttonText: " ",
+                         dateFormat: "yy-mm-dd",
                          altField: '#date-search',
                          onSelect: function() {
                          $('#date-select-form').submit();

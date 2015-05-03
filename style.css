@@ -20,7 +20,7 @@ a, a:hover, a:visited { color: #4183c4 }
 */
 
 /* button code generated at: http://css3buttongenerator.com/ */
-.button {
+.button, .button a {
   background: #3498db;
   background-image: -webkit-linear-gradient(top, #3498db, #2980b9);
   background-image: -moz-linear-gradient(top, #3498db, #2980b9);
@@ -37,7 +37,7 @@ a, a:hover, a:visited { color: #4183c4 }
   text-decoration: none;
 }
 
-.button:hover {
+.button:hover, .button a:hover {
   background: #3cb0fd;
   background-image: -webkit-linear-gradient(top, #3cb0fd, #3498db);
   background-image: -moz-linear-gradient(top, #3cb0fd, #3498db);

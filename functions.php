@@ -55,7 +55,7 @@ function ShowEntries ($init, $offset=0, $entries_per_page=60, $and_where, $hour_
         // Display Date-Picker
 ?>
 <form id="date-select-form" class="button">
-     <span>Select Any Date: <input type="hidden" id="datepicker" /></span>
+     <span><a href="#" id="dp-text">Select Any Date <img src="calendar-white.png" style="height: 1.1em"/><input type="hidden" id="datepicker" /></a></span>
 <input type="hidden" id="date-search" name="date_search" />
 </form>
   <?      
