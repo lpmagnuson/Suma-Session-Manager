@@ -16,7 +16,7 @@ if (isset($_REQUEST['set_init'])) {
     $_SESSION['current_init'] = $_REQUEST['set_init'];
 }
 
-if (! isset($ui_theme)) { $ui_theme="cupertino"; }
+if (! isset($ui_theme)) { $ui_theme="pepper-grinder"; }
 
 ?>
 <html>

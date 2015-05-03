@@ -12,7 +12,7 @@ define ("MYSQL_PASSWORD", ""); //enter value as second argument
 Select a JQueryUI Theme. Any of the followint themes may be used:
 cupertino, flick, hot-sneaks, humanity, overcast, pepper-grinder, redmond, smoothness, south-street, start,  sunny, ui-lightness
 */
-$ui_theme = "cupertino";
+$ui_theme = "pepper-grinder";
 
 
 $default_init   = "";
