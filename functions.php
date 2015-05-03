@@ -38,7 +38,9 @@ function ShowEntries ($init, $offset=0, $entries_per_page=60, $and_where, $hour_
             else { $date = ''; } // don't set date if not a fully qualified date
             
             print '<form action="?" method="post"><input type="hidden" name="date_search" value="'.$previous_date.'"><input type="submit" value="&laquo; '.$previous_date.'" class="button"></form>'.PHP_EOL;
-            print '<a target="suma_analysis" href="'.SUMA_REPORTS_URL.'/#/hourly?id='.$init.'&sdate='.$date.'&edate='.$date.'&classifyCounts=count&wholeSession=no&zeroCounts=no&requireActs=&excludeActs=&requireActGrps=&excludeActGrps=&excludeLocs=&days=mo,tu,we,th,fr,sa,su" class="button">Examine Day in Suma Reports: '.$date.'</a>'.PHP_EOL;
+//            print '<a target="suma_analysis" href="'.SUMA_REPORTS_URL.'/#/hourly?id='.$init.'&sdate='.$date.'&edate='.$date.'&classifyCounts=count&wholeSession=no&zeroCounts=no&requireActs=&excludeActs=&requireActGrps=&excludeActGrps=&excludeLocs=&days=mo,tu,we,th,fr,sa,su" class="button">Examine Day in Suma Reports: '.$date.'</a>'.PHP_EOL;
+            $suma_day_url = SUMA_REPORTS_URL.'/#/hourly?id='.$init.'&sdate='.$date.'&edate='.$date.'&classifyCounts=count&wholeSession=no&zeroCounts=no&requireActs=&excludeActs=&requireActGrps=&excludeActGrps=&excludeLocs=&days=mo,tu,we,th,fr,sa,su';
+            print '<form><input type="button" class="button" id="suma-day-link" value="Examine Day in Suma Reports: '.$date.'" data-url="'.$suma_day_url.'"></form>'.PHP_EOL;            
             print '<form action="?" method="post"><input type="hidden" name="date_search" value="'.$next_date.'"><input type="submit" value="'.$next_date.' &raquo;" class="button"></form>'.PHP_EOL;
         }
         else {
@@ -54,8 +56,8 @@ function ShowEntries ($init, $offset=0, $entries_per_page=60, $and_where, $hour_
         
         // Display Date-Picker
 ?>
-<form id="date-select-form" class="button">
-     <span><a href="#" id="dp-text">Select Any Date <img src="calendar-white.png" style="height: 1.1em"/><input type="hidden" id="datepicker" /></a></span>
+<form id="date-select-form">
+     <input type="button" id="dp-text" value="Select Any Date" class="button"><input type="hidden" id="datepicker" />
 <input type="hidden" id="date-search" name="date_search" />
 </form>
   <?      

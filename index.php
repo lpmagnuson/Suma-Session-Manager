@@ -62,7 +62,10 @@ form { display: inline }
                      //                     var id=$(this).closest('tr').children().first().text();
                      var id=row.children().first().text();
                      var transaction=row.children(':nth-child(5)').text();
-                     
+                 });
+             $('#suma-day-link').click(function() {
+                     var link = $(this).data('url');
+                     window.open(link, "SumaReport");
                  });
          });
 </script>
