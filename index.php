@@ -45,6 +45,13 @@ form { display: inline }
                  });
              $( "#datepicker" ).datepicker({
                  showOn: "button",
+                         <? 
+                         if ($prevent_datepicker_future || ! isset($prevent_datepicker_future)) {
+                         ?>
+                         maxDate: new Date,
+                         <?
+                                 }
+                         ?>
                          buttonImageOnly: true,
                          buttonText: " ",
                          dateFormat: "yy-mm-dd",

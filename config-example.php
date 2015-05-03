@@ -18,6 +18,12 @@ $ui_theme = "cupertino";
 $default_init   = "";
 $entries_per_page = 100;
 
+/* 
+   if $prevent_datepicker_future is true or is not set, the "Select Any Date" 
+   calendar will not allow user to select a date in the future
+*/
+$prevent_datepicker_future = true; 
+
 /*
   If an initiative is intended to usually only have one count per hour, 
   include it in the $one_per_hour_inits array to allow searching on hours
