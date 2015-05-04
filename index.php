@@ -1,7 +1,7 @@
 <? 
 session_start(); 
 include ("config.php");
-require ("andwhere.class.php");
+require ("andwherePDO.class.php");
 include ("scripts.php");
 
 if (DEBUG === true) {

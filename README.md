@@ -35,7 +35,9 @@ Clicking on DateHour link in the "Hours with Multiple Sessions" tab will bring u
 
 ## Demo
 
-Link to demo vid? 
+You can watch a brief video demonstration of the software on YouTube:
+https://youtu.be/ULEQ0ImmWvI
+
 
 ## Acknowledgements
    * Jason Casden & Bret Davidson are the project lead and technical lead for the original Suma project. Thanks for their help in understanding the underpinnings of their project enough to implement this add-on.
