@@ -83,21 +83,18 @@ form { display: inline }
 <div id="content">
 <h1>Suma Session Manager</h1>
 <?
+$result = CheckInstall();
+$installation_problem = $result['installation_problem'];
 
-if (! is_readable("config.php")) {
-    print '<div class="alert"><h3>Config file not readable</h3><p>The file <strong>config.php</strong> is not present or not readable. Please copy the file <strong>config-example.php</strong> to <strong>config.php</strong> and add your local Suma Server URL to activate this service.</p></div>';
-    $installation_problem = true;
-}
-elseif (! defined('SUMASERVER_URL') || (SUMASERVER_URL == "")){
-    print '<div class="alert"><h3>SUMASERVER_URL not set</h3><p>The <strong>SUMASERVER_URL</strong> constant in <strong>config.php</strong> is not set. Please set this constant in order to use the service.</p></div>.';
-    $installation_problem = true;
-}
-else {
+if (isset($result['errors'])) { print $result['errors']; }
+
+
+
+if (! $installation_problem) {
     if (isset($default_init) &! isset ($_SESSION['current_init'])) {
         $_SESSION['current_init'] = $default_init;
     }
     print(SelectInitiative($_SESSION['current_init']));
-}
 
 
 $offset = (isset($_REQUEST['offset']) ? $_REQUEST['offset'] : 0);
@@ -120,6 +117,8 @@ if (isset($_REQUEST['date_search'])) {
     $and_where = new AndWherePDO();
     $and_where->AddCondition('start',$_REQUEST['date_search'].'%','LIKE');
 }
+}
+
 ?>
 
 <div id="tabs">

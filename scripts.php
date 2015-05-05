@@ -262,4 +262,29 @@ function RenderMarkdown ($text) {
   else { return "<pre>$text</pre>"; }
 }
 
+    function CheckInstall () {
+    $installation_problem = false;
+    $errors = "";
+    if (! is_readable("config.php")) {
+        $errors .= '<div class="alert"><h3>Config file not readable</h3><p>The file <strong>config.php</strong> is not present or not readable. Please copy the file <strong>config-example.php</strong> to <strong>config.php</strong> and add your local Suma Server URL to activate this service.</p></div>';
+        $installation_problem = true;
+    }
+    else { 
+        $required_constants = array ('SUMASERVER_URL','MYSQL_HOST','MYSQL_DATABASE','MYSQL_USER', 'MYSQL_PASSWORD');
+
+        foreach ($required_constants as $k) {
+            if (! defined($k) || constant($k) == ""){
+                $errors .= '<div class="alert"><h3>'.$k.' not set</h3><p>The <strong>'.$k.'</strong> constant in <strong>config.php</strong> is not set. Please set this constant in order to use the service.</p></div>';
+                $installation_problem = true;
+            }
+        } //end foreach
+    } //end else if config found
+    
+    $result = array ("installation_problem" => $installation_problem,
+                     "errors" => $errors);
+    return $result;
+} //end CheckInstall
+
+
+
 ?>

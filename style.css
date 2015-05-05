@@ -12,12 +12,7 @@ td {text-align: right; padding-left:1em }
 
 .hour-focus { font-style: italic; color: red }
 
-/*
-a, a:hover, a:visited { color: #4183c4 }
 .alert { border: 3px solid red; padding: .15em .5em; border-radius: 1em; margin: .5em}
-.highlight-field { border: 1px solid red; }
-.required::after { content: "*"; color: red}
-*/
 
 /* button code generated at: http://css3buttongenerator.com/ */
 .button, .button a {
