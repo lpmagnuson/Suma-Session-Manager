@@ -86,9 +86,11 @@ form { display: inline }
 
 if (! is_readable("config.php")) {
     print '<div class="alert"><h3>Config file not readable</h3><p>The file <strong>config.php</strong> is not present or not readable. Please copy the file <strong>config-example.php</strong> to <strong>config.php</strong> and add your local Suma Server URL to activate this service.</p></div>';
+    $installation_problem = true;
 }
 elseif (! defined('SUMASERVER_URL') || (SUMASERVER_URL == "")){
     print '<div class="alert"><h3>SUMASERVER_URL not set</h3><p>The <strong>SUMASERVER_URL</strong> constant in <strong>config.php</strong> is not set. Please set this constant in order to use the service.</p></div>.';
+    $installation_problem = true;
 }
 else {
     if (isset($default_init) &! isset ($_SESSION['current_init'])) {
@@ -122,28 +124,30 @@ if (isset($_REQUEST['date_search'])) {
 
 <div id="tabs">
  <ul>
-  <li><a href="#tabs-sessions">Sessions</a></li>
     <?
-    if (in_array($_SESSION['current_init'], $one_per_hour_inits)) {
-        print '<li><a href="#tabs-multi">Hours with Multiple Sessions</a></li>'.PHP_EOL;
+    if (! $installation_problem) {
+        print'<li><a href="#tabs-sessions">Sessions</a></li>'.PHP_EOL; 
+        if (in_array($_SESSION['current_init'], $one_per_hour_inits)) {
+            print '<li><a href="#tabs-multi">Hours with Multiple Sessions</a></li>'.PHP_EOL;
+        }
     }
 ?>
  <li><a href="#tabs-readme">Documentation</a></li>
  </ul>
 
- <div id="tabs-sessions">
 <?
-    ShowEntries ($_SESSION['current_init'], $offset, $entries_per_page, $and_where, $_REQUEST['hour_focus']);        
-?>
- </div><!--id=tabs-sessions-->
+    if (! $installation_problem) {
+        print '<div id="tabs-sessions">'.PHP_EOL;
 
+        ShowEntries ($_SESSION['current_init'], $offset, $entries_per_page, $and_where, $_REQUEST['hour_focus']);        
+        print '</div><!--id=tabs-sessions-->'.PHP_EOL;
 
-<?
-    if (in_array($_SESSION['current_init'], $one_per_hour_inits)) {
-        print '  <div id="tabs-multi">'.PHP_EOL;
-        ShowMultiHours($_SESSION['current_init']);
-        print '  </div><!--id=tabs-multi-->'.PHP_EOL;
-    }
+        if (in_array($_SESSION['current_init'], $one_per_hour_inits)) {
+            print '  <div id="tabs-multi">'.PHP_EOL;
+            ShowMultiHours($_SESSION['current_init']);
+            print '  </div><!--id=tabs-multi-->'.PHP_EOL;
+        }
+    } //end if no installation problem
 
 //print README file in Documentation Tab
 print '<div id="tabs-readme">'.PHP_EOL;
