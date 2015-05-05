@@ -4,6 +4,12 @@ function ConnectPDO () {
     $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
     return $db;
 }
+function HandleException($e) {
+    print '<div class="alert">'.PHP_EOL;
+    print '<p>An Error occured on <b>'.$e->getFile().' line '.$e->getLine().'</b></p>'.PHP_EOL;
+    print '<p>'.$e->getMessage().'</p>'.PHP_EOL;
+    print '</div>'.PHP_EOL;
+}
 
 function ShowEntries ($init, $offset=0, $entries_per_page=60, $and_where, $hour_focus="") { 
 
@@ -86,9 +92,8 @@ function ShowEntries ($init, $offset=0, $entries_per_page=60, $and_where, $hour_
         $header = '<tr><th>'.$header.'</th></tr>'.PHP_EOL;
         $rows = '<table>'. $header . $rows .'</table>'.PHP_EOL;
         print ($rows);
-    } catch(PDOException $ex) {
-        echo "An Error occured!"; //user friendly message
-        echo ($ex->getMessage());
+    } catch(PDOException $e) {
+        HandleException($e);
     }
 } //end function ShowEntries
 
@@ -140,9 +145,8 @@ function MoveSession($session_id, $transaction_id, $time_shift) {
         $stmt->bindParam(':session_id', $session_id, PDO::PARAM_STR);
         if ($stmt->execute()) { print '<li>SUCCESS: Updated count table</li>'.PHP_EOL;}
         else { print ($stmt->errorCode()); }
-    } catch(PDOException $ex) {
-        echo "An Error occured!"; //user friendly message
-        echo ($ex->getMessage());
+    } catch(PDOException $e) {
+        HandleException($e);
     }
 }
 
@@ -163,9 +167,8 @@ function DeleteUndelete($action, $id) {
         else {
             print '<p>FAILED TO EXECUTE: '. $q .'</p>'.PHP_EOL;
         }
-    } catch(PDOException $ex) {
-        echo "An Error occured!"; //user friendly message
-        echo ($ex->getMessage());
+    } catch(PDOException $e) {
+        HandleException($e);
     }
 } //end function DeleteUndelete
 
@@ -202,9 +205,8 @@ function ShowMultiHours($init) {
             $rows = '<table id="multi-hours">'.$header.$rows.'</table>'.PHP_EOL;
             print($rows);
         }
-    } catch(PDOException $ex) {
-        echo "An Error occured!"; //user friendly message
-        echo ($ex->getMessage());
+    } catch(PDOException $e) {
+        HandleException($e);
     }
 } //end ShowMutliHours
 
