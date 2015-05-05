@@ -4,7 +4,7 @@ function ConnectPDO () {
     $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
     return $db;
 }
-function HandleException($e) {
+function HandleExceptionPDO($e) {
     print '<div class="alert">'.PHP_EOL;
     print '<p>An Error occured on <b>'.$e->getFile().' line '.$e->getLine().'</b></p>'.PHP_EOL;
     print '<p>'.$e->getMessage().'</p>'.PHP_EOL;
@@ -93,7 +93,7 @@ function ShowEntries ($init, $offset=0, $entries_per_page=60, $and_where, $hour_
         $rows = '<table>'. $header . $rows .'</table>'.PHP_EOL;
         print ($rows);
     } catch(PDOException $e) {
-        HandleException($e);
+        HandleExceptionPDO($e);
     }
 } //end function ShowEntries
 
@@ -146,7 +146,7 @@ function MoveSession($session_id, $transaction_id, $time_shift) {
         if ($stmt->execute()) { print '<li>SUCCESS: Updated count table</li>'.PHP_EOL;}
         else { print ($stmt->errorCode()); }
     } catch(PDOException $e) {
-        HandleException($e);
+        HandleExceptionPDO($e);
     }
 }
 
@@ -168,7 +168,7 @@ function DeleteUndelete($action, $id) {
             print '<p>FAILED TO EXECUTE: '. $q .'</p>'.PHP_EOL;
         }
     } catch(PDOException $e) {
-        HandleException($e);
+        HandleExceptionPDO($e);
     }
 } //end function DeleteUndelete
 
@@ -206,7 +206,7 @@ function ShowMultiHours($init) {
             print($rows);
         }
     } catch(PDOException $e) {
-        HandleException($e);
+        HandleExceptionPDO($e);
     }
 } //end ShowMutliHours
 
