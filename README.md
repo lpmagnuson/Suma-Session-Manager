@@ -54,7 +54,7 @@ https://youtu.be/ULEQ0ImmWvI
 
 ## Credits and Invitation to Contribute
 
-**Suma Session Manager** was developed by Ken Irwin at Wittenberg University and is an open-source project. Please feel free to contribute new features, issues, or bug-fixes on GitHub: https://github.com/kenirwin/Suma-Session-Manager
+**Suma Session Manager** was developed by Ken Irwin (kirwin AT wittenberg DOT edu) at Wittenberg University and is an open-source project. Please feel free to contribute new features, issues, or bug-fixes on GitHub: https://github.com/kenirwin/Suma-Session-Manager
 
 Users of **Suma Session Manager** may also be interestd in **Suma Retroactive Data Importer** project, which allows users to retroactively add counts to Suma: https://github.com/kenirwin/suma-retroactive-data-importer -- like the Session Manager, it works outside of Suma itself to contribute additional functionality. 
 
