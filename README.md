@@ -42,7 +42,8 @@ https://youtu.be/ULEQ0ImmWvI
 
 **Suma Session Manager** was developed by Ken Irwin at Wittenberg University and is an open-source project. Please feel free to contribute new features, issues, or bug-fixes on GitHub: https://github.com/kenirwin/Suma-Session-Manager
 
+Users of **Suma Session Manager** may also be interestd in **Suma Retroactive Data Importer** project, which allows users to retroactively add counts to Suma: https://github.com/kenirwin/suma-retroactive-data-importer -- like the Session Manager, it works outside of Suma itself to contribute additional functionality. 
 
 ## Acknowledgements
    * Jason Casden & Bret Davidson are the project lead and technical lead for the original Suma project. Thanks for their help in understanding the underpinnings of their project enough to implement this add-on.
-   
+
