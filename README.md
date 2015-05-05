@@ -38,6 +38,10 @@ Clicking on DateHour link in the "Hours with Multiple Sessions" tab will bring u
 You can watch a brief video demonstration of the software on YouTube:
 https://youtu.be/ULEQ0ImmWvI
 
+## Credits and Invitation to Contribute
+
+**Suma Session Manager** was developed by Ken Irwin at Wittenberg University and is an open-source project. Please feel free to contribute new features, issues, or bug-fixes on GitHub: https://github.com/kenirwin/Suma-Session-Manager
+
 
 ## Acknowledgements
    * Jason Casden & Bret Davidson are the project lead and technical lead for the original Suma project. Thanks for their help in understanding the underpinnings of their project enough to implement this add-on.
