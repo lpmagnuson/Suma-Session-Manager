@@ -6,7 +6,11 @@
 
 ## Installation
 
-Install the Suma Retroactive Data Importer in a folder *outside* of the main Suma web space. Copy the **config-sample.php** file to be **config.php**, then configure the **config.php** file with the MySQL connection information for your Suma Server. 
+Install the Suma Retroactive Data Importer in a folder *outside* of the main Suma web space. Copy the **config-example.php** file to be **config.php**, then configure the **config.php** file with the MySQL connection information for your Suma Server as well as the Suma Server URL and Suma Reports URL. You may customize other variables as well. You may want to pay special attention to these variables:
+
+*$one_per_hour_inits = array();* // this is an array of initiatives IDs for which you would generally prefer to have only one count per hour. 
+
+*$default_init   = "";* // this takes a single initiative ID that will be the default initiative when the page loads. 
 
 ### Security
 
