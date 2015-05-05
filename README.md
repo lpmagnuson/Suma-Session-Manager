@@ -4,13 +4,23 @@
 
 **Note:** The good folks who wrote **Suma** very deliberately elected not to offer functions that delete or alter the data once submitted. Suma Session Manager does all sorts of things they didn't intend. I respect their original decision making and offer this project for other Suma users who want more flexibility. Remember: with great power comes great responsibility. 
 
+## System Requirements
+
+**Suma Session Manager** is written in PHP, and uses PHP's PDO (PHP Data Objects) extension to connect with the MySQL database. It was developed and tested in a CentOS Linux/Apache environment; performance in other environments is as yet unknown. 
+
 ## Installation
 
-Install the Suma Retroactive Data Importer in a folder *outside* of the main Suma web space. Copy the **config-example.php** file to be **config.php**, then configure the **config.php** file with the MySQL connection information for your Suma Server as well as the Suma Server URL and Suma Reports URL. You may customize other variables as well. You may want to pay special attention to these variables:
+Install the Suma Retroactive Data Importer in a folder *outside* of the main Suma web space. The prefered install method is to use: 
+`git clone https://github.com/kenirwin/Suma-Session-Manager.git`
 
-*$one_per_hour_inits = array();* // this is an array of initiatives IDs for which you would generally prefer to have only one count per hour. 
+You can also download a zip file of the current version from: 
+https://github.com/kenirwin/Suma-Session-Manager
 
-*$default_init   = "";* // this takes a single initiative ID that will be the default initiative when the page loads. 
+Copy the **config-example.php** file to be **config.php**, then configure the **config.php** file with the MySQL connection information for your Suma Server as well as the Suma Server URL and Suma Reports URL. You may customize other variables as well. You may want to pay special attention to these variables:
+
+`$one_per_hour_inits = array();` // this is an array of initiatives IDs for which you would generally prefer to have only one count per hour. 
+
+`$default_init   = "";` // this takes a single initiative ID that will be the default initiative when the page loads. 
 
 ### Security
 
