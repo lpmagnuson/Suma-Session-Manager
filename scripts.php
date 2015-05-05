@@ -16,7 +16,7 @@ function ShowEntries ($init, $offset=0, $entries_per_page=60, $and_where, $hour_
 
     try {
         $db = ConnectPDO();
-        $q = 'SELECT `session`.*,count(`number`) as Counts FROM `session`,`count` WHERE session.fk_initiative = :init AND session.id = count.fk_session AND count.number = 1 '.$and_where_string.' GROUP BY fk_session ORDER BY `session`.`id` DESC LIMIT :offset, :entries_per_page';
+        $q = 'SELECT `session`.*,count(`number`) as Counts FROM `session`,`count` WHERE session.fk_initiative = :init AND session.id = count.fk_session AND count.number = 1 '.$and_where_string.' GROUP BY fk_session ORDER BY `session`.`start` DESC LIMIT :offset, :entries_per_page';
         $stmt = $db->prepare($q);
         $stmt->bindParam(':init', $init, PDO::PARAM_INT);
         if (is_object($and_where))  {
