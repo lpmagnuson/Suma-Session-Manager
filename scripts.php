@@ -1,6 +1,6 @@
 <?
 function ConnectPDO () {
-    $db = new PDO('mysql:'.MYSQL_HOST.'=localhost;dbname='.MYSQL_DATABASE.';charset=utf8', MYSQL_USER, MYSQL_PASSWORD);
+    $db = new PDO('mysql:host'.MYSQL_HOST.';dbname='.MYSQL_DATABASE.';charset=utf8', MYSQL_USER, MYSQL_PASSWORD);
     $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
     return $db;
 }
@@ -88,7 +88,7 @@ function ShowEntries ($init, $offset=0, $entries_per_page=60, $and_where, $hour_
             $rows .= '  <td><form action="?" method="post"><input type="hidden" name="action" value="move_session"><input type="hidden" name="session_id" value="' .$myrow['id'] .'">'.HiddenFieldsForDateSearch().'<input type="hidden" name="transaction_id" value="'. $myrow['fk_transaction'] .'">Adjust Time by: ' . DisplayAdjustor() . '</form></td>'. PHP_EOL;
             $rows .= ' </tr>'.PHP_EOL;
         } // end foreach query as myrow
-        $header = join('</th><th>',$headers);
+        //$header = join('</th><th>',$headers);
         $header = '<tr><th>'.$header.'</th></tr>'.PHP_EOL;
         $rows = '<table>'. $header . $rows .'</table>'.PHP_EOL;
         print ($rows);
